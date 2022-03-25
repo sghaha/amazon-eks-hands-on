@@ -18,17 +18,20 @@
 
 
 
-### 7.2 샘플 ReactApp 및 나의 repo 클론
+### 7.2 샘플 ReactApp 및 myapp-repo 클론
 * Cloud9에서
 ```
 cd ~/environment/
 git clone https://github.com/sghaha/sample-react-app.git
 git clone https://github.com/{내깃헙아이디}/myapp-repo.git
-
 ```
 
 
-### 7.3 
+### 7.3 myapp-repo에 push
+#### 7.3.1 파일 복사
+```
+cp -r sample-react-app/* myapp-repo/
+```
 
 
 - 
