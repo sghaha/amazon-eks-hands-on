@@ -1,6 +1,20 @@
 # 7. CI/CD for EKS Cluster
 
 
+- GitHub Actions, Kustomize, ArgoCD를 이용한다
+- GitHub Actions은 스크립트 실행시간 한달 2000분까지 무료이니 고려하자.
+
+
+### 1.1 git Repositories 설정
+실습을 위해 두 개의 github 레파지토리가 필요 합니다.
+* front-app-repo: Frontend 소스가 위치한 레파지토리
+* k8s-manifest-repo: K8S 관련 메니페스트가 위치한 레파지토리
+
+
+
+
+
+
 
 ### 이 아래부터는 예시니까 무시하자 
 
