@@ -5,13 +5,29 @@
 - GitHub Actions은 스크립트 실행시간 한달 2000분까지 무료이니 고려하자.
 
 
-### 1.1 git Repositories 설정
+### 1.1 git Repositories
 실습을 위해 두 개의 github 레파지토리가 필요 합니다.
-* front-app-repo: Frontend 소스가 위치한 레파지토리
+* myapp-repo: Frontend 소스가 위치한 레파지토리
 * k8s-manifest-repo: K8S 관련 메니페스트가 위치한 레파지토리
 
 
 
+#### 1.1.1 생성
+* github에 myapp-repo, k8s-manifest-repo 레파지토리를 생성한다.
+* 일단은 둘다 public하게 생성하자
+
+
+
+
+흠 아무래도 내가 기본 react 앱 레파지토리를 하나 만들어야겠다
+
+
+- 
+-
+-
+-
+-
+-
 
 
 
