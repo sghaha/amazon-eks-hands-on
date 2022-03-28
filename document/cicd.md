@@ -526,38 +526,132 @@ echo $ARGO_PWD
 #### 7.9.6 로그인해보기
 * 앞서 얻은 alb 주소랑 id/pw를 이용하여 로그인 (id : admin)
 
+#### 7.9.7 github id/pw세팅
+* argocd 페이지 왼쪽 기어모양 클릭
+* repositrories 클릭
+* Connect Repo using https 클릭
+* url이랑 id/pw쓰고 커넥트
 
-#### 7.9.7 ArgoCD 설정 1
-
-
-
-
-
-
-
-
-
-
-
+#### 7.9.8 ArgoCD 설정 1
+* 좌측 겹쳐있는 아이콘이 어플리케이션 설정 메뉴. 클릭하자
+* Create App
+* Application Name : myapp-cd-pipeline
+* Project : default
 
 
+#### 7.9.9 ArgoCD 설정 2
+* 아래로 내리면 Source 섹션
+* repo url : git repo주소 (https://github.com/{내 깃헙 주소}/k8s-manifest-repo.git)
+* Revision : main
+* Path :  overlays/dev
 
 
-
-
-
-
-
-
-
-
-
-
+#### 7.9.10 ArgoCD 설정 3
+* 아래로 내리면 Destination 섹션
+* Cluster URL : https://kubernetes.default.svc
+* Namespace : default
+* 이렇게 하고 Create 클릭함
 
 
 
+### 7.10 github action 추가
+#### 7.10.1 설명
+```
+github action 빌드 스크립트 수정
+
+스크립트에 kustomize를 이용하여 컨테이너 image tag 정보를 업데이트 한 후 
+**k8s-manifest-repo**에 commit/push 하는 단계를 추가 해야 합니다.
+
+추가된 단계가 정상적으로 동작 하면, 
+ArgoCD가 **k8s-manifest-repo**를 지켜 보고 있다가 
+새로운 변경 사항이 발생 되었음을 알아채고, 
+
+kustomize build 작업을 수행하여 
+새로운 kubernetes manifest (*새로운 image tag를 포함한)를 eks 클러스터에 배포 합니다.
+```
+
+
+#### 7.10.2 Kustomize 빌드 단계 추가
+```
+cd ~/environment/myapp-repo/.github/workflows
+```
+
+*중간중간 깃험 아이디와 이메일 관련 된것 본인걸로 바꾸고 징행
+```
+cat <<EOF>> build.yaml
+
+      - name: Setup Kustomize
+        uses: imranismail/setup-kustomize@v1
+
+      - name: Checkout kustomize repository
+        uses: actions/checkout@v2
+        with:
+          repository: {내 깃헙 아이디}/k8s-manifest-repo
+          ref: main
+          token: \${{ secrets.ACTION_TOKEN }}
+          path: k8s-manifest-repo
+
+      - name: Update Kubernetes resources
+        run: |
+          echo \${{ steps.login-ecr.outputs.registry }}
+          echo \${{ steps.image-info.outputs.ecr_repository }}
+          echo \${{ steps.image-info.outputs.image_tag }}
+          cd k8s-manifest-repo/overlays/dev/
+          kustomize edit set image \${{ steps.login-ecr.outputs.registry}}/\${{ steps.image-info.outputs.ecr_repository }}=\${{ steps.login-ecr.outputs.registry}}/\${{ steps.image-info.outputs.ecr_repository }}:\${{ steps.image-info.outputs.image_tag }}
+          cat kustomization.yaml
+
+      - name: Commit files
+        run: |
+          cd k8s-manifest-repo
+          git config --global user.email "{내 깃헙 이메일}"
+          git config --global user.name "{내깃헙 아이디}"
+          git commit -am "Update image tag"
+          git push -u origin main
+
+EOF
+```
+
+
+#### 7.10.3 push
+```
+cd ~/environment/myapp-repo
+```
+```
+git add .
+```
+```
+git commit -m "Add kustomize image edit"
+```
+```
+git push -u origin main
+```
 
 
 
+### 7.11 확인
+#### 7.11.1 github action 확인
+* myapp-repo의 action에서 Job 잘 동작하는지 확인
+#### 7.11.2 k8s-manifest-repo확인
+* 해당 repo들어가서 push된거 있는지 확인
+#### 7.11.3 배포 상태 확인
+```
+ArgoCD 화면으로 돌아가 배포 상태를 확인 합니다. 
+Applications > eksworkshop-cd-pipeline 으로 이동 하여 확인 해보면 
+CURRENT SYNC STATUS의 값이 Out of Synced 입니다.
 
+git repository 가 변경되면 자동으로 sync 작업이 수행 하도록 하려면 Auto-Sync 를 활성화 해야 합니다. 
+이를 위해 APP DETAILS 로 이동 하여 ENABLE AUTO-SYNC 버튼을 눌러 활성화 합니다.
+```
 
+#### 7.11.4 반영됐는지 확인
+```
+ **k8s-manifest-repo**의 commit history를 통해 변경된 Image Tag 정보를 확인 합니다.
+
+/overlays/dev/kustomization.yaml을 보면
+
+tag 번호 보임
+예시 : c9854af8
+
+ArgoCD 메뉴에서 Applications > eksworkshop-cd-pipeline > 이동 하여 다이어그램에서 
+myapp-로 시작하는 pod을 클릭하면 상세 정보 확인이 가능합니다.
+```
