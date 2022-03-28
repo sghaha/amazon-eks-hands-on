@@ -49,6 +49,53 @@ cp -r sample-react-app/* myapp-repo/
 
 
 
+### 7.4 IAM 설정
+
+*myapp 을 빌드 하고 docker 이미지로 만든 다음 이를 ECR 에 push 하는 과정은 gitHub Action을 통해 이루어 집니다. 
+*이 과정에서 사용할 IAM User를 생성 합니다.
+*cloud9에서 아래 명령어 실행
+```
+aws iam create-user --user-name github-action
+```
+
+*ECR policy 생성
+*주의사항 1) 아래 명령어 날리기 전에 myapp이라는 ecr을 생성한다.
+*주의사항 2) ap-northeast-2를 자신이 사용하는 리전으로 바꾸어주자
+```
+cd ~/environment
+```
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowPush",
+            "Effect": "Allow",
+            "Action": [
+                "ecr:GetDownloadUrlForLayer",
+                "ecr:BatchGetImage",
+                "ecr:BatchCheckLayerAvailability",
+                "ecr:PutImage",
+                "ecr:InitiateLayerUpload",
+                "ecr:UploadLayerPart",
+                "ecr:CompleteLayerUpload"
+            ],
+            "Resource": "arn:aws:ecr:ap-northeast-2:${ACCOUNT_ID}:repository/myapp"
+        },
+        {
+            "Sid": "GetAuthorizationToken",
+            "Effect": "Allow",
+            "Action": [
+                "ecr:GetAuthorizationToken"
+            ],
+            "Resource": "*"
+        }
+    ]
+}
+EOF
+```
+
+
 - 
 -
 -
