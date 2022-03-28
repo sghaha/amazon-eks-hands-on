@@ -108,20 +108,139 @@ demo-flask-backend-hpa   Deployment/demo-flask-backend   4%/30%    1         5  
 
 
 
+### 6.3 부하테스트
+#### 6.3.1 모니터링
+```
+kubectl get hpa -w
+```
+
+#### 6.3.2 부하테스트 진행
+* 마지막에 url은 본인에게 맞춰서 한다.
+```
+ab -c 200 -n 200 -t 30 http://$(kubectl get ingress/backend-ingress -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')/contents/aws
+```
+* pod가 5개까지 늘어났다가 줄어들 것이다.
 
 
 
 
+### 6.4 Cluster Autoscaler
+#### 6.4.1 설명
+```
+HPA때는 파드만 늘렸다
+워커노드에 파드가 가득찼을때 사용하는것이 Cluster Autoscaler이다
+
+pending 상태인 파드가 존재할 경우, 워커 노드를 스케일 아웃합니다.
+```
+* 혹시 클러스터의 상태를 시각화하고싶으면 https://codeberg.org/hjacobs/kube-ops-view 를 사용해 보자
+
+
+#### 6.4.2 현재 워커의 오토스케일링 Max값 수정
+```
+Ec2 콘솔 - 오토스케일링 그룹 - eks 해당하는거 선택
+편집 눌러서 Maximim capacity를 늘려주자
+5로 늘려주자
+```
+
+
+#### 6.4.3 yaml 다운
+* Cluster Atuoscaler에서 제공하는 예제파일 다운로드
+```
+wget https://raw.githubusercontent.com/kubernetes/autoscaler/master/cluster-autoscaler/cloudprovider/aws/examples/cluster-autoscaler-autodiscover.yaml
+```
+
+#### 6.4.4 클러스터 이름 설정
+vi cluster-autoscaler-autodiscover.yaml
+
+163번째줄에 <YOUR CLUSTER NAME>을 나의 eks 클러스터 이름으로
+
+#### 6.4.5 적용
+```
+kubectl apply -f cluster-autoscaler-autodiscover.yaml
+```
+
+### 6.5 테스트
+#### 6.5.1 모니터링 명령어
+```
+kubectl get nodes -w
+```
+
+#### 6.5.2 파드 늘리기
+```
+kubectl create deployment autoscaler-demo --image=nginx
+```
+```
+kubectl scale deployment autoscaler-demo --replicas=100
+```
 
 
 
 
+#### 6.5.3 배포 진행 상태 파악하기 위해
+```
+kubectl get deployment autoscaler-demo --watch
+```
+* 워커노드가 5개까지 늘어남
+
+#### 6.5.4 파드삭제
+```
+kubectl delete deployment autoscaler-demo
+```
 
 
 
 
+### 6.6 Kubernetes Operational View 
+#### 6.6.1 설명
+* 쿠버네티스 클러스터의 상태를 시각적으로 볼 수 있는 간단한 페이지
+
+#### 6.6.2 helm cli 툴 설치
+```
+curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 | bash
+```
+
+#### 6.6.3 확인
+```
+helm version --short
+```
+
+#### 6.6.4 stable 저장소 추가
+```
+helm repo add stable https://charts.helm.sh/stable
+```
 
 
+#### 6.6.5 차트 리스트들을 확인
+```
+helm search repo stable
+```
+
+#### 6.6.6 명령어를 위한 Bash completion을 구성
+
+```
+helm completion bash >> ~/.bash_completion
+. /etc/profile.d/bash_completion.sh
+. ~/.bash_completion
+source <(helm completion bash)
+```
 
 
+#### 6.6.7 kube-ops-view 설치	
+```
+helm install kube-ops-view \
+stable/kube-ops-view \
+--set service.type=LoadBalancer \
+--set rbac.create=True
+```
 
+
+#### 6.6.8 배포 확인	
+```
+helm list
+```
+
+#### 6.6.9 시각적으로 확인	
+```
+kubectl get svc kube-ops-view
+에서 나온 external-ip를 복사해서 웹페이지 접속
+```
