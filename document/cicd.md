@@ -51,20 +51,37 @@ cp -r sample-react-app/* myapp-repo/
 
 ### 7.4 IAM 설정
 
+#### 7.4.1 설명
 * myapp 을 빌드 하고 docker 이미지로 만든 다음 이를 ECR 에 push 하는 과정은 gitHub Action을 통해 이루어 집니다. 
+
+#### 7.4.2 IAM user 생성
 * 이 과정에서 사용할 IAM User를 생성 합니다.
 * cloud9에서 아래 명령어 실행
 ```
 aws iam create-user --user-name github-action
 ```
 
-* ECR policy 생성
+*결과예시
+```
+{
+    "User": {
+        "UserName": "github-action", 
+        "Path": "/", 
+        "CreateDate": "2022-01-28T04:08:37Z", 
+        "UserId": "000000000", 
+        "Arn": "arn:aws:iam::000000000:user/github-action"
+    }
+}
+```
+
+#### 7.4.3 ECR policy 생성
 * 주의사항 1) 아래 명령어 날리기 전에 myapp이라는 ecr을 생성한다.
 * 주의사항 2) ap-northeast-2를 자신이 사용하는 리전으로 바꾸어주자
 ```
 cd ~/environment
 ```
 ```
+cat <<EOF> ecr-policy.json
 {
     "Version": "2012-10-17",
     "Statement": [
@@ -94,6 +111,46 @@ cd ~/environment
 }
 EOF
 ```
+
+
+
+#### 7.4.4 IAM policy를 생성
+* policy 이름으로 ecr-policy 를 사용 합니다. 
+```
+aws iam create-policy --policy-name ecr-policy --policy-document file://ecr-policy.json
+```
+
+* 결과예시
+```
+{
+    "Policy": {
+        "PolicyName": "ecr-policy", 
+        "PermissionsBoundaryUsageCount": 0, 
+        "CreateDate": "2022-01-28T04:10:57Z", 
+        "AttachmentCount": 0, 
+        "IsAttachable": true, 
+        "PolicyId": "000000000000", 
+        "DefaultVersionId": "v1", 
+        "Path": "/", 
+        "Arn": "arn:aws:iam::0000000:policy/ecr-policy", 
+        "UpdateDate": "2022-01-28T04:10:57Z"
+    }
+}
+```
+* iam 콘솔 policy들어가면 ecr-policy가 생성된거 확인 가능
+* iam user도 github-action이 생긴거 확인가능
+
+
+
+#### 7.4.5 ECR policy를 IAM user에 부여
+```
+aws iam attach-user-policy --user-name github-action --policy-arn arn:aws:iam::${ACCOUNT_ID}:policy/ecr-policy
+```
+
+
+
+
+
 
 
 - 
