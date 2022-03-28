@@ -399,6 +399,165 @@ EOF
 ```
 
 
+```
+cd ~/environment/k8s-manifest-repo/overlays/dev
+```
+
+```
+cat <<EOF> myapp-service-patch.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: myapp
+  annotations:
+    alb.ingress.kubernetes.io/healthcheck-path: "/"
+  labels:
+    env: dev
+spec:
+  selector:
+    app: myapp
+
+EOF
+```
+
+```
+cat <<EOF> myapp-deployment-patch.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: myapp
+  namespace: default
+  labels:
+    env: dev
+spec:
+  selector:
+    matchLabels:
+      app: myapp
+  template:
+    metadata:
+      labels:
+        app: myapp
+EOF
+```
+
+* 중간에 내 ecr주소로 바꿀것
+
+```
+cat <<EOF> kustomization.yaml
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+images:
+- name: {내 ecr주소}.dkr.ecr.ap-northeast-2.amazonaws.com/myapp-repo
+  newName: {내 ecr주소}.dkr.ecr.ap-northeast-2.amazonaws.com/myapp-repo
+  newTag: aa68ef2e
+resources:
+- ../../base
+patchesStrategicMerge:
+- myapp-deployment-patch.yaml
+- myapp-service-patch.yaml
+EOF
+```
+
+
+
+### 7.8 Kustomize를 위한 github
+#### 7.8.1 k8s-manifest-repo 이름으로 깃헙 repo 생성
+#### 7.8.2 소스 push
+* 중간에 내 깃험 주소로 변경하자
+```
+cd ~/environment/k8s-manifest-repo/
+git init
+git add .
+git commit -m "first commit"
+git branch -M main
+git remote add origin https://github.com/sghaha/k8s-manifest-repo.git
+git push -u origin main
+```
+
+
+### 7.9 ArgoCD
+#### 7.9.1 ArgoCD 설치
+```
+kubectl create namespace argocd
+```
+```
+kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
+```
+
+#### 7.9.2 ArgoCD CLI 를 설치
+```
+cd ~/environment
+```
+```
+VERSION=$(curl --silent "https://api.github.com/repos/argoproj/argo-cd/releases/latest" | grep '"tag_name"' | sed -E 's/.*"([^"]+)".*/\1/')
+```
+```
+sudo curl --silent --location -o /usr/local/bin/argocd https://github.com/argoproj/argo-cd/releases/download/$VERSION/argocd-linux-amd64
+```
+```
+sudo chmod +x /usr/local/bin/argocd
+```
+
+#### 7.9.3 ELB연동
+* ArgoCD 서버는 기본적으로 퍼블릭 하게 노출되지 않습니다. 실습의 목적상 이를 변경하여 ELB 를 통해 접속 가능하도록 하겠습니다.
+```
+kubectl patch svc argocd-server -n argocd -p '{"spec": {"type": "LoadBalancer"}}'
+```
+* 3~4분 기다리자
+
+#### 7.9.4 ELB 주소 확인
+```
+export ARGOCD_SERVER=`kubectl get svc argocd-server -n argocd -o json | jq --raw-output .status.loadBalancer.ingress[0].hostname`
+```
+```
+echo $ARGOCD_SERVER
+```
+
+
+#### 7.9.5 password 얻기
+```
+ARGO_PWD=`kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d`
+```
+```
+echo $ARGO_PWD
+```
+
+
+#### 7.9.6 로그인해보기
+* 앞서 얻은 alb 주소랑 id/pw를 이용하여 로그인 (id : admin)
+
+
+#### 7.9.7 ArgoCD 설정 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
