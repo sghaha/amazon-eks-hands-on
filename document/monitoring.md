@@ -1,1 +1,1 @@
-# 8. Monitoring
+# 8. Monitoring (Prometheus & Grafana)
