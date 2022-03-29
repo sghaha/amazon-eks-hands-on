@@ -56,15 +56,44 @@ kubectl get svc
 
 
 
-### 9.3 fluentd-bit의 yaml이 사라졌다...
-여기서부터는 다시 해야할듯
+### 9.3 fluentd-bit 설치
+
+#### 9.3.1 yaml파일 다운로드
+```
+wget -O fluent-bit.yaml https://github.com/sghaha/amazon-eks-hands-on/blob/main/file/fluent-bit.yaml?raw=true
+```
+
+#### 9.3.2 yaml파일 수정
+```
+FLUENT_ELASTICSEARCH_HOST의 value를 나의 일레스틱서치 alb주소로 바꾸자
+* http://빼고 넣자
 
 
 
+#### 9.3.3 네임스페이스 생성
+```
+kubectl create namespace logging
+```
+
+#### 9.3.4 fluentd-bit 설치
+```
+kubectl apply -f fluent-bit.yaml
+```
+
+
+#### 9.3.5 확인
+```
+kubectl get pod -n logging
+```
+* 노드의 숫자만큼 파드가 뜬다고한다.
 
 
 
+###9.4 kibana에서 확인
 
-
-
-
+####9.4.1 인덱스 패던 만들기
+* 키바나 콘솔 접근후 왼쪽 Management - index pattern
+* 인덱스 패턴에 melon-* 하고 next step
+* @timestamp 선택하고 create pattern
+* 왼쪽에 discover 선택하면 
+* 로그가 쌓이는게 보인다.
