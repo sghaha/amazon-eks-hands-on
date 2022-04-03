@@ -1,7 +1,7 @@
 # 3. EKS Cluster 생성
 
-### eksctl로 클러스터 생성하기
-#### eks-demo-cluster.yaml 파일 생성
+### 3.1 eksctl로 클러스터 생성하기
+#### 3.1.1 eks-demo-cluster.yaml 파일 생성
 ```
 cd ~/environment
 ```
@@ -39,12 +39,12 @@ cloudWatch:
 EOF
 ```
 
-#### 클러스터를 배포
+#### 3.1.2 클러스터를 배포
 ```
 eksctl create cluster -f eks-demo-cluster.yaml
 ```
 
-#### 노드가 제대로 배포되었는지 확인
+#### 3.1.3 노드가 제대로 배포되었는지 확인
 ```
 kubectl get nodes 
 ```
