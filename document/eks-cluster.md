@@ -72,4 +72,4 @@ cat ~/.kube/config
 
 #### 3.1.5 cloudwatch put disable
 - 실습하는 동안 단한번도 보지 않을 eks 코어단 로그가 cloudwatch에 쌓인다. 괜히 하루에 1달러 이상나가기 때문에 꺼준다.
-- eks 콘손 > eks-demo 클릭 > 구성 > 로깅 관리 > 모두 끄고 > 변경사항 저장
+- eks 콘솔 > eks-demo 클릭 > 구성 > 로깅 관리 > 모두 끄고 > 변경사항 저장
