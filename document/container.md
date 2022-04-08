@@ -43,7 +43,7 @@ aws ecr create-repository --repository-name sample-nodejs-backend --image-scanni
 
 - "아마존 Amazon Elastic Kubernetes Service 콘손 > Amazon ECR > 프라이빗 리포지토리"에 생성된 레포지토리 클릭
 
-- 푸시명령보기를 클릭하면 명령어가 나옵니다. 아래에 쓰여있는 명령어랑 비슷한데 다르다면 "푸시명령보기"에 나온 명령어를 우선시 합니다.
+- 푸시명령보기를 클릭하면 명령어가 나옵니다. 아래에 쓰여있는 명령어랑 비슷한데 다르다면 "푸시명령보기"에 나온 명령어를 우선시 합니다.(리전부분, 본인 ID부분 등이 조금씩 다를수있습니다.)
 
 ```
 aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com
@@ -113,7 +113,7 @@ aws ecr create-repository --repository-name sample-react-app --image-scanning-co
 
 - "아마존 Amazon Elastic Kubernetes Service 콘손 > Amazon ECR > 프라이빗 리포지토리"에 생성된 레포지토리 클릭
 
-- 푸시명령보기를 클릭하면 명령어가 나옵니다. 아래에 쓰여있는 명령어랑 비슷한데 다르다면 "푸시명령보기"에 나온 명령어를 우선시 합니다.
+- 푸시명령보기를 클릭하면 명령어가 나옵니다. 아래에 쓰여있는 명령어랑 비슷한데 다르다면 "푸시명령보기"에 나온 명령어를 우선시 합니다. (리전부분, 본인 ID부분 등이 조금씩 다를수있습니다.)
 
 ```
 aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com
@@ -134,12 +134,12 @@ docker build -t sample-react-app .
 
 #### 2.2.5 이미지 태그 지정
 ```
-docker tag sample-nodejs-backend:latest $ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/sample-nodejs-backend:latest
+docker tag sample-react-app:latest $ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/sample-react-app:latest
 ```
 
 #### 2.2.6 이미지를 리포지토리에 푸쉬
 ```
-docker push $ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/sample-nodejs-backend:latest
+docker push $ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/sample-react-app:latest
 ```
 
 - 여기까지 진행하면 ecr콘솔에 latest태그로 도커 이미지가 올라간걸 확인 가능
