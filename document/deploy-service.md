@@ -140,13 +140,60 @@ echo http://$(kubectl get ingress/backend-ingress -o jsonpath='{.status.loadBala
 ### 5.2 서비스 배포하기(2nd, 프론트엔드)
 * Amazon ECR에 이미지 올리기 실습 부분이 선행되어야 합니다.
 
-#### 5.2.1 디렉토리 이동
+#### 5.2.1 backend url확인
+```
+echo http://$(kubectl get ingress/backend-ingress -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')
+```
+
+#### 5.2.2 소스 수정
+```
+cd ~/environment/sample-react-app
+```
+
+```
+vi nginx.conf
+```
+
+- http://aaa.bbb.ccc를 위에서 확인한 backend url로 바꾸어줍니다.
+
+#### 5.2.3 빌드
+
+```
+npm run build
+```
+
+
+#### 5.2.4 이미지 ecr에 푸시
+
+- "아마존 Amazon Elastic Kubernetes Service 콘손 > Amazon ECR > 프라이빗 리포지토리"에 sample-react-app 레포지토리 클릭
+
+- 푸시명령보기를 클릭하면 명령어가 나옵니다. 아래에 쓰여있는 명령어랑 비슷한데 다르다면 "푸시명령보기"에 나온 명령어를 우선시 합니다. (리전부분, 본인 ID부분 등이 조금씩 다를수있습니다.)
+
+```
+aws ecr get-login-password --region ap-northeast-1 | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com
+```
+
+```
+docker build -t sample-react-app .
+```
+
+```
+docker tag sample-react-app:latest $ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/sample-react-app:latest
+```
+
+```
+docker push $ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/sample-react-app:latest
+```
+
+
+
+#### 5.2.5 디렉토리 이동
 ```
 cd ~/environment/manifests/
 ```
 
 
-#### 5.2.2 deloy manifest 생성	
+#### 5.2.6 deloy manifest 생성	
 - 아래 ap-northeast-1부분을 자신의 리전에 맞게 변경해야합니다.
 
 ```
@@ -177,7 +224,7 @@ EOF
 ```
 
 
-#### 5.2.3 service manifest 생성	
+#### 5.2.7 service manifest 생성	
 
 ```
 cat <<EOF> frontend-service.yaml
@@ -200,7 +247,7 @@ EOF
 ```
 
 
-#### 5.2.4 ingress manifest 파일 생성	
+#### 5.2.8 ingress manifest 파일 생성	
 
 ```
 cat <<EOF> frontend-ingress.yaml
@@ -231,7 +278,7 @@ EOF
 
 
 
-#### 5.2.5 ALB 프로비저닝	
+#### 5.2.9 ALB 프로비저닝	
 ```
 kubectl apply -f frontend-deployment.yaml
 ```
@@ -259,7 +306,7 @@ kubectl get ingress
 ```
 
 
-#### 5.2.6 alb 주소 확인	
+#### 5.2.10 alb 주소 확인	
 ```
 echo http://$(kubectl get ingress/frontend-ingress -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')/
 ```
