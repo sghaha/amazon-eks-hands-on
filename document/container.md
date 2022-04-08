@@ -83,13 +83,42 @@ docker push $ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/sample-nodejs-backe
 - 여기까지 진행하면 ecr콘솔에 latest태그로 도커 이미지가 올라간걸 확인 가능
 
 
+#### 2.1.7 방금 만든 도커 이미지 삭제
+- 바로바로 안지워주면 나중에 귀찮아 진다.
+- 
+```
+docker images -a
+```
+
+- 결과 예시
+```
+REPOSITORY                                                           TAG          IMAGE ID       CREATED         SIZE
+<none>                                                               <none>       85fb9a09b553   2 minutes ago   143MB
+<none>                                                               <none>       e8c96d7d909e   2 minutes ago   143MB
+876630244803.dkr.ecr.ap[중간생략].com/sample-nodejs-backend            latest       6e84f53bb0ea   2 minutes ago   143MB
+sample-react-app                                                     latest       6e84f53bb0ea   2 minutes ago   143MB
+<none>                                                               <none>       991ab0515040   2 minutes ago   143MB
+<none>                                                               <none>       e956badfd97e   2 minutes ago   142MB
+<none>                                                               <none>       159cef29cf02   2 minutes ago   143MB
+<none>                                                               <none>       0f79de9797c8   2 minutes ago   142MB
+<none>                                                               <none>       f04b20055c8c   2 minutes ago   142MB
+<none>                                                               <none>       d0fb434ea76d   2 minutes ago   142MB
+node                                                                 12-alpine    8dc0ee810c0a   2 days ago      91MB
+```
+
+- 876630244803.dkr.ecr.ap[중간생략].com/sample-nodejs-backend 라고 써있는 것의 Image ID를 복사해서
+
+
+```
+docker rmi --force 6e84f53bb0ea
+```
 
 
 
 
 
 
-2.2 같은작업을 한번 더 진행
+###2.2 같은작업을 한번 더 진행
 
 - 2.1에는 backend로 쓰일 이미지 작업을 한것이고 2.2챕터에서는 frontend로 쓰일 이미지를 작업합니다.
 - 이 두 이미지는 실습이 끝날때까지 쓰일 예정입니다.
@@ -151,4 +180,36 @@ docker push $ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/sample-react-app:la
 ```
 
 - 여기까지 진행하면 ecr콘솔에 latest태그로 도커 이미지가 올라간걸 확인 가능
+
+
+#### 2.2.7 방금 만든 도커 이미지 삭제
+- 바로바로 안지워주면 나중에 귀찮아 진다.
+- 
+```
+docker images -a
+```
+
+- 결과 예시
+```
+REPOSITORY                                                           TAG          IMAGE ID       CREATED         SIZE
+<none>                                                               <none>       85fb9a09b553   2 minutes ago   143MB
+<none>                                                               <none>       e8c96d7d909e   2 minutes ago   143MB
+876630244803.dkr.ecr.ap[중간생략].com/sample-nodejs-backend            latest       6e84f53bb0ea   2 minutes ago   143MB
+sample-react-app                                                     latest       6e84f53bb0ea   2 minutes ago   143MB
+<none>                                                               <none>       991ab0515040   2 minutes ago   143MB
+<none>                                                               <none>       e956badfd97e   2 minutes ago   142MB
+<none>                                                               <none>       159cef29cf02   2 minutes ago   143MB
+<none>                                                               <none>       0f79de9797c8   2 minutes ago   142MB
+<none>                                                               <none>       f04b20055c8c   2 minutes ago   142MB
+<none>                                                               <none>       d0fb434ea76d   2 minutes ago   142MB
+node                                                                 12-alpine    8dc0ee810c0a   2 days ago      91MB
+```
+
+- 876630244803.dkr.ecr.ap[중간생략].com/sample-nodejs-backend 라고 써있는 것의 Image ID를 복사해서
+
+
+```
+docker rmi --force 6e84f53bb0ea
+```
+
 
