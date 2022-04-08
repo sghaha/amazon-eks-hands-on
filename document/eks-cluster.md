@@ -6,6 +6,13 @@
 cd ~/environment
 ```
 ```
+mkdir manifests
+```
+```
+cd manifests
+```
+
+```
 cat << EOF > eks-demo-cluster.yaml
 ---
 apiVersion: eksctl.io/v1alpha5
@@ -21,8 +28,8 @@ vpc:
 
 managedNodeGroups:
   - name: node-group # 클러스터의 노드 그룹명
-    instanceType: m5.large # 클러스터 워커 노드의 인스턴스 타입
-    desiredCapacity: 3 # 클러스터 워커 노드의 갯수
+    instanceType: t3.small # 클러스터 워커 노드의 인스턴스 타입
+    desiredCapacity: 2 # 클러스터 워커 노드의 갯수
     volumeSize: 10  # 클러스터 워커 노드의 EBS 용량 (단위: GiB)
     ssh:
       enableSsm: true
