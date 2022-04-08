@@ -96,20 +96,38 @@ EOF
 
 #### 5.1.5 ALB 프로비저닝	
 ```
-kubectl apply -f flask-deployment.yaml
+kubectl apply -f backend-deployment.yaml
 ```
+
+- 확인
 ```
-kubectl apply -f flask-service.yaml
+kubectl get pod
 ```
+
 ```
-kubectl apply -f ingress.yaml
+kubectl apply -f backend-service.yaml
+```
+- 확인
+```
+kubectl get svc
+```
+
+
+```
+kubectl apply -f backend-ingress.yaml
+```
+- 확인
+```
+kubectl get ingress
 ```
 
 
 #### 5.1.6 alb 주소 확인	
 ```
-echo http://$(kubectl get ingress/backend-ingress -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')/contents/aws
+echo http://$(kubectl get ingress/backend-ingress -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')/dump/all
 ```
+
+- 위 명령어를 날리면 url이 return 되는데, 약 3~5분뒤에 인터넷 브라우져로 들어가봅니다. json이 리턴되면 성공
 
 
 ### 5.2 서비스 배포하기(2nd 백엔드)
