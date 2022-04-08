@@ -116,6 +116,10 @@ sample-nodejs-backend-hpa   Deployment/sample-nodejs-backend   0%/30%    1      
 ```
 kubectl get hpa -w
 ```
+* 혹은
+```
+kubectl get pod
+```
 
 #### 6.3.2 부하테스트 진행
 * 마지막에 url은 본인에게 맞춰서 한다.
@@ -145,7 +149,7 @@ pending 상태인 파드가 존재할 경우, 워커 노드를 스케일 아웃�
 ```
 Ec2 콘솔 - 오토스케일링 그룹 - eks 해당하는거 선택
 편집 눌러서 Maximim capacity를 늘려주자
-5로 늘려주자
+3으로 늘려주자
 ```
 
 
@@ -176,7 +180,7 @@ kubectl get nodes -w
 kubectl create deployment autoscaler-demo --image=nginx
 ```
 ```
-kubectl scale deployment autoscaler-demo --replicas=100
+kubectl scale deployment autoscaler-demo --replicas=12
 ```
 
 
@@ -186,7 +190,7 @@ kubectl scale deployment autoscaler-demo --replicas=100
 ```
 kubectl get deployment autoscaler-demo --watch
 ```
-* 워커노드가 5개까지 늘어남
+* 워커노드가 3개까지 늘어남
 
 #### 6.5.4 파드삭제
 ```
@@ -199,6 +203,7 @@ kubectl delete deployment autoscaler-demo
 ### 6.6 Kubernetes Operational View 
 #### 6.6.1 설명
 * 쿠버네티스 클러스터의 상태를 시각적으로 볼 수 있는 간단한 페이지
+* 귀찮으면 안해도된다. 나중에 더 좋은 모니터링 툴 설치한다.
 
 #### 6.6.2 helm cli 툴 설치
 ```
