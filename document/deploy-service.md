@@ -185,15 +185,47 @@ docker tag sample-react-app:latest $ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.
 docker push $ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/sample-react-app:latest
 ```
 
+#### 5.2.5 방금 만든 도커 이미지 삭제
+- 바로바로 안지워주면 나중에 귀찮아 진다.
 
 
-#### 5.2.5 디렉토리 이동
+```
+docker images -a
+```
+
+- 결과 예시
+```
+REPOSITORY                                                           TAG          IMAGE ID       CREATED         SIZE
+<none>                                                               <none>       85fb9a09b553   2 minutes ago   143MB
+<none>                                                               <none>       e8c96d7d909e   2 minutes ago   143MB
+876630244803.dkr.ecr.ap[중간생략].com/sample-react-app                 latest       6e84f53bb0ea   2 minutes ago   143MB
+sample-react-app                                                     latest       6e84f53bb0ea   2 minutes ago   143MB
+<none>                                                               <none>       991ab0515040   2 minutes ago   143MB
+<none>                                                               <none>       e956badfd97e   2 minutes ago   142MB
+<none>                                                               <none>       159cef29cf02   2 minutes ago   143MB
+<none>                                                               <none>       0f79de9797c8   2 minutes ago   142MB
+<none>                                                               <none>       f04b20055c8c   2 minutes ago   142MB
+<none>                                                               <none>       d0fb434ea76d   2 minutes ago   142MB
+node                                                                 12-alpine    8dc0ee810c0a   2 days ago      91MB
+```
+
+- 876630244803.dkr.ecr.ap[중간생략].com/sample-nodejs-backend 라고 써있는 것의 Image ID를 복사해서
+
+
+```
+docker rmi --force 6e84f53bb0ea
+```
+
+
+
+
+#### 5.2.6 디렉토리 이동
 ```
 cd ~/environment/manifests/
 ```
 
 
-#### 5.2.6 deloy manifest 생성	
+#### 5.2.7 deloy manifest 생성	
 - 아래 ap-northeast-1부분을 자신의 리전에 맞게 변경해야합니다.
 
 ```
@@ -224,7 +256,7 @@ EOF
 ```
 
 
-#### 5.2.7 service manifest 생성	
+#### 5.2.8 service manifest 생성	
 
 ```
 cat <<EOF> frontend-service.yaml
@@ -247,7 +279,7 @@ EOF
 ```
 
 
-#### 5.2.8 ingress manifest 파일 생성	
+#### 5.2.9 ingress manifest 파일 생성	
 
 ```
 cat <<EOF> frontend-ingress.yaml
@@ -278,7 +310,7 @@ EOF
 
 
 
-#### 5.2.9 ALB 프로비저닝	
+#### 5.2.10 ALB 프로비저닝	
 ```
 kubectl apply -f frontend-deployment.yaml
 ```
@@ -306,7 +338,7 @@ kubectl get ingress
 ```
 
 
-#### 5.2.10 alb 주소 확인	
+#### 5.2.11 alb 주소 확인	
 ```
 echo http://$(kubectl get ingress/frontend-ingress -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')/
 ```
