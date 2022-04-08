@@ -26,6 +26,26 @@ echo ${rolearn}
 ```
 
 
+#### 4.0.4 추가수행 (만약!!!!! assumed-role이 있다면 )
+```
+assumedrolename=$(echo ${rolearn} | awk -F/ '{print $(NF-1)}')
+```
+```
+rolearn=$(aws iam get-role --role-name ${assumedrolename} --query Role.Arn --output text) 
+```
+
+#### 4.0.5 identity 맵핑을 생성
+```
+eksctl create iamidentitymapping --cluster eks-demo --arn ${rolearn} --group system:masters --username admin
+```
+
+#### 4.0.6 확인
+```
+kubectl describe configmap -n kube-system aws-auth
+```
+
+
+
 ### 4.1 AWS Load Balancer 컨트롤러 생성
 #### 4.1.1 manifests 이름의 폴더 생성
 - /home/ec2-user/environment/manifests/alb-ingress-controller
