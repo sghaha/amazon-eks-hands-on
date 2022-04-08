@@ -56,3 +56,17 @@ eksctl create cluster -f eks-demo-cluster.yaml
 ```
 kubectl get nodes 
 ```
+
+- 결과예시
+```
+NAME                                                STATUS   ROLES    AGE     VERSION
+ip-192-168-31-9.ap-northeast-2.compute.internal     Ready    <none>   3m11s   v1.21.5-eks-9017834
+ip-192-168-46-249.ap-northeast-2.compute.internal   Ready    <none>   2m58s   v1.21.5-eks-9017834
+ip-192-168-77-131.ap-northeast-2.compute.internal   Ready    <none>   3m2s    v1.21.5-eks-9017834
+```
+
+
+#### 3.1.4 자격증명 더해진것 확인
+```
+cat ~/.kube/config
+```
