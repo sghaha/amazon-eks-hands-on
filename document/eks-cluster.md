@@ -50,7 +50,7 @@ EOF
 ```
 eksctl create cluster -f eks-demo-cluster.yaml
 ```
-- 약 30분 걸림
+- 약 20분 걸림
 
 #### 3.1.3 노드가 제대로 배포되었는지 확인
 ```
@@ -59,10 +59,9 @@ kubectl get nodes
 
 - 결과예시
 ```
-NAME                                                STATUS   ROLES    AGE     VERSION
-ip-192-168-31-9.ap-northeast-2.compute.internal     Ready    <none>   3m11s   v1.21.5-eks-9017834
-ip-192-168-46-249.ap-northeast-2.compute.internal   Ready    <none>   2m58s   v1.21.5-eks-9017834
-ip-192-168-77-131.ap-northeast-2.compute.internal   Ready    <none>   3m2s    v1.21.5-eks-9017834
+NAME                                                STATUS   ROLES    AGE   VERSION
+ip-192-168-18-99.ap-northeast-1.compute.internal    Ready    <none>   90s   v1.21.5-eks-9017834
+ip-192-168-70-110.ap-northeast-1.compute.internal   Ready    <none>   85s   v1.21.5-eks-9017834
 ```
 
 
