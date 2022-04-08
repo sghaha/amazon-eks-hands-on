@@ -24,32 +24,34 @@ kubectl get deployment metrics-server -n kube-system
 
 
 #### 6.2.3 백엔드 yaml 수정
-* 예제는 백엔드로 demo-flask-backend를 쓰고있는데 입맛에 맞게 수정하면된다.
+
 * 핵심은 replicas를 1로 하는거랑 마지막에 리소스 크기를 정해주는것
+* 리전과 본인 ID등을 한번더 확인하세요
+
 ```
 cd /home/ec2-user/environment/manifests
 ```
 ```
-cat <<EOF> flask-deployment.yaml
+cat <<EOF> backend-deployment.yaml
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: demo-flask-backend
+  name: sample-nodejs-backend
   namespace: default
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: demo-flask-backend
+      app: sample-nodejs-backend
   template:
     metadata:
       labels:
-        app: demo-flask-backend
+        app: sample-nodejs-backend
     spec:
       containers:
-        - name: demo-flask-backend
-          image: $ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/demo-flask-backend:latest
+        - name: sample-nodejs-backend
+          image: $ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/sample-nodejs-backend:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
@@ -59,39 +61,40 @@ spec:
             limits:
               cpu: 500m
 EOF
+
 ```
 
 
 #### 6.2.4 반영
 ```
-kubectl apply -f flask-deployment.yaml
+kubectl apply -f backend-deployment.yaml
 ```
 
 #### 6.2.5 hpa yaml 생성
 * name 같은거 본인에게 맞게 수정
 
 ```
-cat <<EOF> flask-hpa.yaml
+cat <<EOF> backend-hpa.yaml
 ---
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
-  name: demo-flask-backend-hpa
+  name: sample-nodejs-backend-hpa
   namespace: default
 spec:
   scaleTargetRef:
     apiVersion: apps/v1
     kind: Deployment
-    name: demo-flask-backend
+    name: sample-nodejs-backend
   minReplicas: 1
-  maxReplicas: 5
+  maxReplicas: 3
   targetCPUUtilizationPercentage: 30
 EOF
 ```
 
 #### 6.2.6 반영
 ```
-kubectl apply -f flask-hpa.yaml
+kubectl apply -f backend-hpa.yaml
 ```
 
 
@@ -102,8 +105,8 @@ kubectl get hpa
 
 * 결과 예시
 ```
-NAME                     REFERENCE                       TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
-demo-flask-backend-hpa   Deployment/demo-flask-backend   4%/30%    1         5         1          36s
+NAME                        REFERENCE                          TARGETS   MINPODS   MAXPODS   REPLICAS   AGE
+sample-nodejs-backend-hpa   Deployment/sample-nodejs-backend   0%/30%    1         3         1          31s
 ```
 
 
@@ -117,9 +120,12 @@ kubectl get hpa -w
 #### 6.3.2 부하테스트 진행
 * 마지막에 url은 본인에게 맞춰서 한다.
 ```
-ab -c 200 -n 200 -t 30 http://$(kubectl get ingress/backend-ingress -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')/contents/aws
+ab -c 200 -n 1000 -t 120 http://$(kubectl get ingress/backend-ingress -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')/
 ```
-* pod가 5개까지 늘어났다가 줄어들 것이다.
+* pod가 늘어났다가 줄어들 것이다.(위 명령어 설정값에 따라 최대 3개까지 늘어난다. c: 사용자수, n : 사용자가 보내는 요청의 수, t : 시간)
+
+* 스케일아웃은 그래도 금방되는 편인데 스케일인은 10-15분 걸린다. 
+
 
 
 
