@@ -7,11 +7,16 @@
 - Instance type : t3.small, platform : Amazon Linux 2 > next step > Create environment
 
 #### 1.1.2 IAM Role 생성
-- Administrator access 정책을 가진 IAM Role을 생성
+Administrator access 정책을 가진 IAM Role을 생성
+- AWS 콘솔 - IAM - ROLE(역할) - Create Role
+- aws service - ec2 선택 후 next
+- AdministratorAccess 검색후 선택, next
+- Role Name에 "HandsOn-Admin-본인아이디"를 적어주자 그리고 create
 
 #### 1.1.3 AWS Cloud9 Instance에 IAM Role 부여
-- EC2 instnace console > Select AWS Cloud9 instance, Actions > Security > Modify IAM Role
-- Change IAM role
+- EC2 instnace console > Select AWS Cloud9 instance
+- Actions(작업) > Security(보안) > Modify IAM Role(IAM 역할 수정)
+- Change IAM role (1.1.2에서 생성한 role)
 
 #### 1.1.4 IDE에서 IAM 설정 업데이트
 - AWS Cloud9 credentials 비활성화하고 IAM Role을 붙임(해당 credentials는 EKS IAM authentication과 호환되지 않음)
