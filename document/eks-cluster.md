@@ -50,6 +50,7 @@ EOF
 ```
 eksctl create cluster -f eks-demo-cluster.yaml
 ```
+- 약 30분 걸림
 
 #### 3.1.3 노드가 제대로 배포되었는지 확인
 ```
