@@ -27,6 +27,7 @@ echo ${rolearn}
 
 
 #### 4.0.4 추가수행 (만약!!!!! assumed-role이 있다면 )
+- 일반적인 경우에는 필요하지 않습니다. 다음단계로 넘어가셔도 됩니다.
 ```
 assumedrolename=$(echo ${rolearn} | awk -F/ '{print $(NF-1)}')
 ```
@@ -56,10 +57,21 @@ mkdir -p manifests/alb-ingress-controller && cd manifests/alb-ingress-controller
 ```
 
 #### 4.1.2 클러스터에 대한 IAM OIDC(OpenID Connect) identity Provider를 생성
+- 쿠버네티스가 직접 관리하는 사용자 계정을 의미하는 service account에 IAM role을 사용하기 위해
 ```
 eksctl utils associate-iam-oidc-provider --region ${AWS_REGION} --cluster eks-demo --approve
 ```
 
+
+- 확인
+```
+aws eks describe-cluster --name eks-demo --query "cluster.identity.oidc.issuer" --output text
+```
+
+- 위 명령어에서 나오는 id 값 확인후 아래와 같이 날려보자
+```
+aws iam list-open-id-connect-providers | grep 7C9832F25C000000000000C3
+```
 #### 4.1.3 AWS Load Balancer Controller에 부여할 IAM Policy 생성
 ```
 aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy \
