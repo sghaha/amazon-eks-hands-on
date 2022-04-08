@@ -20,14 +20,19 @@ Administrator access 정책을 가진 IAM Role을 생성
 
 #### 1.1.4 IDE에서 IAM 설정 업데이트
 - AWS Cloud9 credentials 비활성화하고 IAM Role을 붙임(해당 credentials는 EKS IAM authentication과 호환되지 않음)
-- Cloud9 IDE > AWS SETTINGS in the sidebar > Credentials > Disable the AWS managed temperature credits 
+- Cloud9 IDE > 우측 상단 기어 아이콘 클릭 > AWS SETTINGS in the sidebar > Credentials > Disable the AWS managed temperature credits 
 - 기존의 자격 증명 파일도 제거
 ```
 rm -vf ${HOME}/.aws/credentials
 ```
 - Cloud9 IDE가 올바른 IAM Role을 사용하고 있는지 확인
 ```
-aws sts get-caller-identity --query Arn | grep eks-admin
+aws sts get-caller-identity --query Arn | grep HandsOn-Admin-본인아이디
+
+```
+- 결과 예시
+```
+arn:aws:sts::876630244803:assumed-role/HandsOn-Admin-sghaha/i-03e9af70279e891de
 ```
 
 ### 1.2 AWS CLI
@@ -52,12 +57,20 @@ sudo curl -o /usr/local/bin/kubectl  \
 sudo chmod +x /usr/local/bin/kubectl
 ```
 
+- kubectl 설치 확인
+```
+kubectl version --client=true --short=true
+```
+
 ### 1.4 etc
 #### 1.4.1 jq 설치
+- json을 다루는 유틸리티
 ```
 sudo yum install -y jq
 ```
 #### 1.4.2 bash-completion 설치
+- 쉘에 completion script를 소싱하면 kubectl 명령어의 자동 완성을 가능하게 만들 수 있습니다. 
+하지만 이런 completion script는 bash-completion에 의존하기 때문에 아래의 명령어를 통해, bash-completion 을 설치해야 합니다.
 ```
 sudo yum install -y bash-completion
 ```
