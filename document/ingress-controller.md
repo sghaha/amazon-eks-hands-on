@@ -57,7 +57,7 @@ mkdir -p manifests/alb-ingress-controller && cd manifests/alb-ingress-controller
 ```
 
 #### 4.1.2 클러스터에 대한 IAM OIDC(OpenID Connect) identity Provider를 생성
-- 쿠버네티스가 직접 관리하는 사용자 계정을 의미하는 service account에 IAM role을 사용하기 위해
+- 쿠버네티스가 직접 관리하는 사용자 계정을 의미하는 service account에 IAM role을 사용하기 위해 생성합니다.
 ```
 eksctl utils associate-iam-oidc-provider --region ${AWS_REGION} --cluster eks-demo --approve
 ```
@@ -72,6 +72,17 @@ aws eks describe-cluster --name eks-demo --query "cluster.identity.oidc.issuer" 
 ```
 aws iam list-open-id-connect-providers | grep 7C9832F25C000000000000C3
 ```
+
+
+- 결과예시
+```
+"Arn": "arn:aws:iam::876630244803:oidc-provider/oidc.eks.ap-northeast-1.amazonaws.com/id/7C9832F25C000000000000C3"
+```
+
+
+
+
+
 #### 4.1.3 AWS Load Balancer Controller에 부여할 IAM Policy 생성
 ```
 aws iam create-policy --policy-name AWSLoadBalancerControllerIAMPolicy \
@@ -90,9 +101,12 @@ eksctl create iamserviceaccount \
 ```
 
 #### 4.1.5 AWS Load Balancer controller를 클러스터에 추가
+- 인증서 구성을 웹훅에 삽입할 수 있도록 cert-manager 를 설치합니다
 ```
 kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/v1.4.1/cert-manager.yaml
 ```
+- Cert-manager는 쿠버네티스 클러스터 내에서 TLS인증서를 자동으로 프로비저닝 및 관리하는 오픈 소스입니다.
+
 
 #### 4.1.6 Load balancer controller yaml 파일 다운로드
 ```
@@ -100,6 +114,10 @@ wget https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-control
 ```
 
 #### 4.1.7 yaml 파일에서 클러스터의 cluster-name을 eks-demo으로 편집
+
+```
+vi v2_2_1_full.yaml
+```
 ```
 spec:
     containers:
@@ -110,6 +128,7 @@ spec:
 ```
 
 #### 4.1.8 yaml 파일에서 ServiceAccount yaml spec 삭제
+- 서비스 어카운트를 이미 생성했기 때문에 아래 내용 삭제
 ```
 ---
 apiVersion: v1
@@ -130,4 +149,33 @@ kubectl apply -f v2_2_1_full.yaml
 #### 4.1.10 배포가 성공적으로 되었는지 확인
 ```
 kubectl get deployment -n kube-system aws-load-balancer-controller
+```
+
+
+- 결과 예시
+```
+NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
+aws-load-balancer-controller   1/1     1            1           49s
+```
+
+
+#### 4.1.11 서비스 어카운트 확인
+```
+kubectl get sa aws-load-balancer-controller -n kube-system -o yaml
+```
+
+
+#### 4.1.12 애드온 로그 확인
+
+- Yaml 파일에서 애드온 네임스페이스를 kube-system으로 명시했기에
+```
+kubectl logs -n kube-system $(kubectl get po -n kube-system | egrep -o "aws-load-balancer[a-zA-Z0-9-]+")
+```
+
+#### 4.1.13 속성값 파악
+```
+ALBPOD=$(kubectl get pod -n kube-system | egrep -o "aws-load-balancer[a-zA-Z0-9-]+")
+```
+```
+kubectl describe pod -n kube-system ${ALBPOD}
 ```
