@@ -127,7 +127,7 @@ kubectl get ingress
 echo http://$(kubectl get ingress/backend-ingress -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')/dump/all
 ```
 
-- 위 명령어를 날리면 url이 return 되는데, 약 3~5분뒤에 인터넷 브라우져로 들어가봅니다. json이 리턴되면 성공
+- 위 명령어를 날리면 url이 return 되는데, 약 3~5분뒤에 인터넷 브라우로 들어가봅니다. json이 리턴되면 성공
 
 
 
@@ -311,5 +311,5 @@ kubectl get ingress
 echo http://$(kubectl get ingress/frontend-ingress -o jsonpath='{.status.loadBalancer.ingress[*].hostname}')/
 ```
 
-- 위 명령어를 날리면 url이 return 되는데, 약 3~5분뒤에 인터넷 브라우져로 들어가봅니다. 앱이 뜨면 성공
+- 위 명령어를 날리면 url이 return 되는데, 약 3~5분뒤에 인터넷 브라우저로 들어가봅니다. 사이트가 뜨고 데이터가 보인다면 성공
 
