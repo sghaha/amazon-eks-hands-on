@@ -31,7 +31,7 @@ spec:
         app: sample-nodejs-backend
     spec:
       containers:
-        - name: demo-flask-backend
+        - name: sample-nodejs-backend
           image: $ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/sample-nodejs-backend:latest
           imagePullPolicy: Always
           ports:
