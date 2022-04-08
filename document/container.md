@@ -9,6 +9,10 @@ cd ~/environment/
 ```
 git clone https://github.com/sghaha/sample-nodejs-backend.git
 ``` 
+```
+npm install
+```
+
 
 #### 2.1.2 이미지 리포지토리를 생성
 ```
