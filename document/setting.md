@@ -99,6 +99,12 @@ echo "export AWS_REGION=${AWS_REGION}" | tee -a ~/.bash_profile
     
 aws configure set default.region ${AWS_REGION}
 ```
+
+
+- 리전 세팅 확인
+```
+aws configure get default.region
+```
 #### 1.6.2 현재 계정 ID을 등록
 ```
 export ACCOUNT_ID=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r '.accountId')
