@@ -18,23 +18,33 @@ repo랑 workflow 클릭한다음에 Gen token 클릭
 ### 7.1 git Repositories
 실습을 위해 두 개의 github 레파지토리가 필요 합니다.
 * myapp-repo: Frontend 소스가 위치한 레파지토리
-* k8s-manifest-repo: K8S 관련 메니페스트가 위치한 레파지토리
+* manifest-repo: K8S 관련 메니페스트가 위치한 레파지토리
 
 
 
 #### 7.1.1 생성
-* github에 myapp-repo, k8s-manifest-repo 레파지토리를 생성한다.
+* github에 myapp-repo, manifest-repo 레파지토리를 생성한다.
 * 일단은 둘다 public하게 생성하자
-
+* private으로 생성한다음에 추후 문제 생기는거 해결하는것도 좋은 경험일듯.
 
 
 ### 7.2 샘플 ReactApp 및 myapp-repo 클론
 * Cloud9에서
 ```
 cd ~/environment/
+```
+
+- 이 핸즈온을 따라했으면 아래 sample-react-app은 이미 받았을 것이다. 그러면 이 클론은하지 않아도 된다.
+```
 git clone https://github.com/sghaha/sample-react-app.git
+```
+
+- 내 repo를 클론한다.
+```
 git clone https://github.com/{내깃헙아이디}/myapp-repo.git
 ```
+
+
 
 
 ### 7.3 myapp-repo에 push
@@ -304,13 +314,13 @@ EOF
 cd ~/environment
 ```
 ```
-mkdir -p ./k8s-manifest-repo/base
+mkdir -p ./manifest-repo/base
 ```
 ```
-mkdir -p ./k8s-manifest-repo/overlays/dev
+mkdir -p ./manifest-repo/overlays/dev
 ```
 ```
-cd ../k8s-manifest-repo/base
+cd ../manifest-repo/base
 ```
 
 * 중간에 내 ecr주소로 바꾸어서 명령어 실행
@@ -400,7 +410,7 @@ EOF
 
 
 ```
-cd ~/environment/k8s-manifest-repo/overlays/dev
+cd ~/environment/manifest-repo/overlays/dev
 ```
 
 ```
@@ -461,16 +471,16 @@ EOF
 
 
 ### 7.8 Kustomize를 위한 github
-#### 7.8.1 k8s-manifest-repo 이름으로 깃헙 repo 생성
+#### 7.8.1 manifest-repo 이름으로 깃헙 repo 생성
 #### 7.8.2 소스 push
 * 중간에 내 깃험 주소로 변경하자
 ```
-cd ~/environment/k8s-manifest-repo/
+cd ~/environment/manifest-repo/
 git init
 git add .
 git commit -m "first commit"
 git branch -M main
-git remote add origin https://github.com/sghaha/k8s-manifest-repo.git
+git remote add origin https://github.com/sghaha/manifest-repo.git
 git push -u origin main
 ```
 
@@ -541,7 +551,7 @@ echo $ARGO_PWD
 
 #### 7.9.9 ArgoCD 설정 2
 * 아래로 내리면 Source 섹션
-* repo url : git repo주소 (https://github.com/{내 깃헙 주소}/k8s-manifest-repo.git)
+* repo url : git repo주소 (https://github.com/{내 깃헙 주소}/manifest-repo.git)
 * Revision : main
 * Path :  overlays/dev
 
@@ -560,10 +570,10 @@ echo $ARGO_PWD
 github action 빌드 스크립트 수정
 
 스크립트에 kustomize를 이용하여 컨테이너 image tag 정보를 업데이트 한 후 
-**k8s-manifest-repo**에 commit/push 하는 단계를 추가 해야 합니다.
+**manifest-repo**에 commit/push 하는 단계를 추가 해야 합니다.
 
 추가된 단계가 정상적으로 동작 하면, 
-ArgoCD가 **k8s-manifest-repo**를 지켜 보고 있다가 
+ArgoCD가 **manifest-repo**를 지켜 보고 있다가 
 새로운 변경 사항이 발생 되었음을 알아채고, 
 
 kustomize build 작업을 수행하여 
@@ -586,23 +596,23 @@ cat <<EOF>> build.yaml
       - name: Checkout kustomize repository
         uses: actions/checkout@v2
         with:
-          repository: {내 깃헙 아이디}/k8s-manifest-repo
+          repository: {내 깃헙 아이디}/manifest-repo
           ref: main
           token: \${{ secrets.ACTION_TOKEN }}
-          path: k8s-manifest-repo
+          path: manifest-repo
 
       - name: Update Kubernetes resources
         run: |
           echo \${{ steps.login-ecr.outputs.registry }}
           echo \${{ steps.image-info.outputs.ecr_repository }}
           echo \${{ steps.image-info.outputs.image_tag }}
-          cd k8s-manifest-repo/overlays/dev/
+          cd manifest-repo/overlays/dev/
           kustomize edit set image \${{ steps.login-ecr.outputs.registry}}/\${{ steps.image-info.outputs.ecr_repository }}=\${{ steps.login-ecr.outputs.registry}}/\${{ steps.image-info.outputs.ecr_repository }}:\${{ steps.image-info.outputs.image_tag }}
           cat kustomization.yaml
 
       - name: Commit files
         run: |
-          cd k8s-manifest-repo
+          cd manifest-repo
           git config --global user.email "{내 깃헙 이메일}"
           git config --global user.name "{내깃헙 아이디}"
           git commit -am "Update image tag"
@@ -631,7 +641,7 @@ git push -u origin main
 ### 7.11 확인
 #### 7.11.1 github action 확인
 * myapp-repo의 action에서 Job 잘 동작하는지 확인
-#### 7.11.2 k8s-manifest-repo확인
+#### 7.11.2 manifest-repo확인
 * 해당 repo들어가서 push된거 있는지 확인
 #### 7.11.3 배포 상태 확인
 ```
@@ -645,7 +655,7 @@ git repository 가 변경되면 자동으로 sync 작업이 수행 하도록 하
 
 #### 7.11.4 반영됐는지 확인
 ```
- **k8s-manifest-repo**의 commit history를 통해 변경된 Image Tag 정보를 확인 합니다.
+ **manifest-repo**의 commit history를 통해 변경된 Image Tag 정보를 확인 합니다.
 
 /overlays/dev/kustomization.yaml을 보면
 
