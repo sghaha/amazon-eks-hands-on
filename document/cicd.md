@@ -49,13 +49,34 @@ git clone https://github.com/{내깃헙아이디}/myapp-repo.git
 
 ### 7.3 myapp-repo에 push
 #### 7.3.1 파일 복사
+- 혹시 숨김파일은 안보이게 설정되있을 수 있으니, cloud9파일 리스트 바로 위에 설정 클릭하고 show hidden files클릭하자
+
+- sample-react-app 디렉토리에 있는 파일을 node_module빼고 전부 myapp-repo디렉토리에 복사하자
+
 ```
-cp -r sample-react-app/* myapp-repo/
+cd ~/environment/myapp-repo
 ```
+```
+npm insll
+```
+```
+npm run build
+```
+
+
+
+
+
 #### 7.3.2 push
+* push전 확인할 것 1) 푸시할 전체 파일은 약 25개입니다. 너무 많으면 잘못하고 계신겁니다.
+* push전 확인할 것 2) .dockeringnore .gitingnore파일이 포함되어있는지 확인합시다. 없다면 아마 파일이 전부 복사 된것이 아닙니다.
+* push전 확인할 것 3) nginx.conf의 proxy_pass가 나의 backend alb주소를 가리키고 있는지 확인합시다.
+
 * cloud9 왼쪽의 깃 아이콘을 클릭한후 커밋 & push하자
-* 커밋은 + 버튼누르고 메시지 입력후 컨트롤+엔터 하면되고
+* 커밋은 Changes에서 + 버튼누르고 메시지 입력후 컨트롤+엔터 하면되고
 * 푸시는 레포지토리 옆에 말풍선같은 아이콘 클릭후 push를 누른다음에 push하고싶은 repo를 클릭후 id/pw를 입력하면 된다
+
+* 제대로 되면 나의 깃헙 레포지토리에 푸시가 된것을 확인할 수 있다.
 
 
 
@@ -68,25 +89,25 @@ cp -r sample-react-app/* myapp-repo/
 * 이 과정에서 사용할 IAM User를 생성 합니다.
 * cloud9에서 아래 명령어 실행
 ```
-aws iam create-user --user-name github-action
+aws iam create-user --user-name github-action-{내아이디}
 ```
 
 * 결과예시
 ```
 {
     "User": {
-        "UserName": "github-action", 
+        "UserName": "github-action-sghaha", 
         "Path": "/", 
-        "CreateDate": "2022-01-28T04:08:37Z", 
-        "UserId": "000000000", 
-        "Arn": "arn:aws:iam::000000000:user/github-action"
+        "CreateDate": "2022-04-11T12:05:03Z", 
+        "UserId": "AID----------EWTUOTG", 
+        "Arn": "arn:aws:iam::876630244803:user/github-action-sghaha"
     }
 }
 ```
 
 #### 7.4.3 ECR policy 생성
-* 주의사항 1) 아래 명령어 날리기 전에 myapp-repo라는 ecr을 생성한다.
-* 주의사항 2) ap-northeast-2를 자신이 사용하는 리전으로 바꾸어주자
+* 주의사항 1) 아래 명령어 날리기 전에 myapp-repo라는 ecr을 생성한다. ecr콘솔가서 생성, 프라이빗, 푸시할떄 스캔
+* 주의사항 2) ap-northeast-1를 자신이 사용하는 리전으로 바꾸어주자
 ```
 cd ~/environment
 ```
@@ -107,7 +128,7 @@ cat <<EOF> ecr-policy.json
                 "ecr:UploadLayerPart",
                 "ecr:CompleteLayerUpload"
             ],
-            "Resource": "arn:aws:ecr:ap-northeast-2:${ACCOUNT_ID}:repository/myapp-repo"
+            "Resource": "arn:aws:ecr:ap-northeast-1:${ACCOUNT_ID}:repository/myapp-repo"
         },
         {
             "Sid": "GetAuthorizationToken",
@@ -126,8 +147,9 @@ EOF
 
 #### 7.4.4 IAM policy를 생성
 * policy 이름으로 ecr-policy 를 사용 합니다. 
+* {내아이디} 부분 수정에 유의
 ```
-aws iam create-policy --policy-name ecr-policy --policy-document file://ecr-policy.json
+aws iam create-policy --policy-name ecr-policy-{내아이디} --policy-document file://ecr-policy.json
 ```
 
 * 결과예시
@@ -153,9 +175,14 @@ aws iam create-policy --policy-name ecr-policy --policy-document file://ecr-poli
 
 
 #### 7.4.5 ECR policy를 IAM user에 부여
+- {내아이디}부분 두곳을 잘 고쳐놓고 명령문을 날리자 {ACCOUNT_ID}는 냅두자. 
+
 ```
-aws iam attach-user-policy --user-name github-action --policy-arn arn:aws:iam::${ACCOUNT_ID}:policy/ecr-policy
+aws iam attach-user-policy --user-name github-action-{내아이디} --policy-arn arn:aws:iam::${ACCOUNT_ID}:policy/ecr-policy-{내아이디}
 ```
+
+- IAM콘솔 - 사용자 로 들어가서 만든 ID를 클릭하면 policy가 연동되어있는걸 볼수 있다.
+
 
 
 
