@@ -563,7 +563,7 @@ CURRENT SYNC STATUS의 값이 Out of Synced 입니다.
 
 git repository 가 변경되면 자동으로 sync 작업이 수행 하도록 하려면 Auto-Sync 를 활성화 해야 합니다. 
 이를 위해 APP DETAILS 로 이동 하여 ENABLE AUTO-SYNC 버튼을 눌러 활성화 합니다.
-```
+
 
 #### 7.9.11 반영됐는지 확인
 
