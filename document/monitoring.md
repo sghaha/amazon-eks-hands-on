@@ -94,7 +94,7 @@ prometheus-node-exporter-v2wm5                   1/1     Running   0          5m
 prometheus-pushgateway-fd65767c7-rlwdx           1/1     Running   0          7m24s
 prometheus-server-6c55d96794-vjkz4               2/2     Running   0          7m24s
 ```
-* 사실 prometheus-node-exporter는 하나만 떠도 되는건데.. 노트 스케일 아웃되면서 뭔가 꼬인듯 하다. 기다려도 팬딩상태에서 일단 변하지 않아서 일단 아래꺼 먼저 진행한다.
+* 아무리 기다려도 prometheus-node-exporter가 펜딩 상태인게 있을수 있다. 일단 하나라도 뜨긴 떴다면  아래꺼 먼저 진행한다.
 
 
 #### 8.2.7 프로메테우스 alb 생성
@@ -197,3 +197,7 @@ react-v4     NodePort       10.100.237.248   <none>                             
 * 화면 바뀌면 VictoriaMetrics에 프로메테우스 지정
 * import클릭
 * (https://grafana.com/grafana/dashboards/11074 많이 사용하는 거란다)
+
+
+
+* 노드는 3개인데 모니터링에 하나밖에 안나오는이유는 아까 프로메테우스 파드 2개가 펜딩상태이기 때문이다. 이것이 펜딩 상태인 이유는 나머지 노드 2개의 파드가 꽉차있기 때문이다. 그래서 이걸 해결하려면 프로메테우스 파드가 뜰수있도록 해당 노드에 파드 공간을 남겨둬야한다. 이를 위한 방법을 찾아보는것도 좋을듯하다.
