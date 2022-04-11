@@ -603,7 +603,7 @@ cd /home/ec2-user/environment/manifests
 ```
 
 ```
-cat <<EOF> myapp-deployment-patch.yaml
+cat <<EOF> myapp-ingress.yaml
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -625,23 +625,80 @@ spec:
                 name: "myapp"
                 port:
                   number: 80
-EOF               
+EOF
+```
+
+```
+kubectl apply -f myapp-ingress.yaml
+```
+
+
+* 확인 (약 5분후)
+```
+kubectl get ingress
+```
+
+```
+NAME               CLASS    HOSTS   ADDRESS                                                                       PORTS   AGE
+backend-ingress    <none>   *       k8s-default-backendi-6566bc7d31-1782616189.ap-northeast-1.elb.amazonaws.com   80      3d7h
+frontend-ingress   <none>   *       k8s-default-frontend-3a6fb0b00c-1248002473.ap-northeast-1.elb.amazonaws.com   80      3d7h
+myapp-ingress      <none>   *       k8s-default-myapping-78a29f8d18-1418731677.ap-northeast-1.elb.amazonaws.com   80      38s
+```
+
+* myapp-ingress의 alb주소를 브라우저에 입력해서 접속
+
+
+
+###7.10 배포해보기
+
+* /myapp-repo/src/layout/Layout.js의 41번째줄, "ExamApp"을 다른문구로 바꾸어 봅시다
+
+* 커밋&푸시
+
+* 깃허브 액션이 잘돌아가나 확인
+
+* ArgoCD가 잘돌아가나확인
+
+* 배포 완료후 alb주소로 문구 바뀐것 확인
+
+* 배포도중에 잠깐 bad gateway가 뜨는것은 롤링 업데이트 설정으로 극복가능하지만 이 실습에선 다루지 않겠습니다.
+
+
+
+### 7.11 정리
+축하드립니다. 여러분은 코드 커밋만 하면 자동으로 배포가 되는 과정을 겪었습니다.
+
+
+
+### 7.12 sample-react-app 삭제
+
+* myapp을 띄웠으니 이제 sample-react-app은 필요하지 않습니다.
+
+```
+cd /home/ec2-user/environment/manifests
+```
+
+```
+kubectl delete -f frontend-ingress.yaml 
+```
+
+```
+kubectl delete -f frontend-service.yaml 
+```
+```
+kubectl delete -f frontend-deployment.yaml 
+```
+
+```
+kubctl get pod
 ```
 
 
 
-
-
-
-
+* sample-react-app이 삭제된걸 볼수 있습니다.
 ```
- **manifest-repo**의 commit history를 통해 변경된 Image Tag 정보를 확인 합니다.
-
-/overlays/dev/kustomization.yaml을 보면
-
-tag 번호 보임
-예시 : c9854af8
-
-ArgoCD 메뉴에서 Applications > eksworkshop-cd-pipeline > 이동 하여 다이어그램에서 
-myapp-로 시작하는 pod을 클릭하면 상세 정보 확인이 가능합니다.
+NAME                                    READY   STATUS    RESTARTS   AGE
+myapp-595d8d967f-ljdk6                  1/1     Running   0          6m18s
+myapp-595d8d967f-m4wmd                  1/1     Running   0          6m21s
+sample-nodejs-backend-578855f99-zkdss   1/1     Running   0          3d7h
 ```
