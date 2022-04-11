@@ -1,5 +1,8 @@
 # 8. Monitoring (Prometheus & Grafana)
 
+* 혹시 모르니 노드 최대값을 5로 설정하자.
+* EKS콘솔 - 내 클러스터 클릭 - 구성 - 컴퓨팅 - 노드그룹 클릭 - 편집 - 최대크기 5로 설정
+
 ### 8.1 헬름 설치
 
 #### 8.1.1 헬름 설치 확인
@@ -9,6 +12,9 @@ helm version
 
 #### 8.1.2 설치
 * 설치 안되어있으면 설치
+```
+cd ~/environment
+```
 ```
 curl https://raw.githubusercontent.com/helm/helm/master/scripts/get-helm-3 > get_helm.sh
 ```
@@ -72,16 +78,23 @@ Error: rendered manifests contain a resource that already exists
 #### 8.2.6 확인
 ```
 kubectl get pods -n prometheus	
+
+* 파드를 많이 띄운다. 노드가 스케일 아웃될수있으니 만약 펜딩상태라면 모두 러닝이 될때까지 조금 기다리자.
+
+
 ```
 * 결과예시
 ```
 NAME                                             READY   STATUS    RESTARTS   AGE
-prometheus-alertmanager-6c845bbb9c-jhxxj         2/2     Running   0          3m14s
-prometheus-kube-state-metrics-6c44ff7fb6-fwhcz   1/1     Running   0          3m14s
-prometheus-node-exporter-6hfcj                   1/1     Running   0          3m14s
-prometheus-pushgateway-86679dcf68-l5bds          1/1     Running   0          3m14s
-prometheus-server-869789c557-g74pt               2/2     Running   0          3m14s
+prometheus-alertmanager-87bd747b4-6t9jx          2/2     Running   0          7m24s
+prometheus-kube-state-metrics-5fd8648d78-59zlg   1/1     Running   0          7m24s
+prometheus-node-exporter-dv6bb                   0/1     Pending   0          7m24s
+prometheus-node-exporter-dzxmp                   0/1     Pending   0          7m24s
+prometheus-node-exporter-v2wm5                   1/1     Running   0          5m40s
+prometheus-pushgateway-fd65767c7-rlwdx           1/1     Running   0          7m24s
+prometheus-server-6c55d96794-vjkz4               2/2     Running   0          7m24s
 ```
+* 사실 prometheus-node-exporter는 하나만 떠도 되는건데.. 노트 스케일 아웃되면서 뭔가 꼬인듯 하다. 기다려도 팬딩상태에서 일단 변하지 않아서 일단 아래꺼 먼저 진행한다.
 
 
 #### 8.2.7 프로메테우스 alb 생성
@@ -95,6 +108,7 @@ kubectl patch svc prometheus-server -n prometheus -p '{"spec": {"type": "LoadBal
 ```
 kubectl get svc -n prometheus
 ```
+
 * 결과 예시
 ```
 NAME                            TYPE           CLUSTER-IP       EXTERNAL-IP                                                                   PORT(S)        AGE
@@ -116,8 +130,17 @@ a4989f9b647394afd92aa8f1e0f65099-199140108.ap-northeast-2.elb.amazonaws.com
 #### 8.3.1 Grafana 설치	
 
 * https://grafana.com/docs/grafana/latest/installation/kubernetes/ 에 있는 grafana.yaml을 쓴다
+
+* https://github.com/sghaha/amazon-eks-hands-on/blob/main/file/grafana.yaml 이거 써도된다.
+
+
 ```
 kubectl apply -f grafana.yaml
+```
+
+* pod 러닝 확인
+```
+kubectl get pod
 ```
 
 #### 8.3.2 url 확인
@@ -134,7 +157,8 @@ react-v4     NodePort       10.100.237.248   <none>                             
 
 
 #### 8.3.3 콘솔 확인	
-
+ 
+* 5분뒤에 확인하자 3000번 포트임을 주의
 * ad68155bf162b44c1b6dd61faa7ceef6-1225394448.ap-northeast-2.elb.amazonaws.com:3000
 
 
