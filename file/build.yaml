@@ -1,8 +1,9 @@
+
 name: Build Front
 
 on:
   push:
-    branches: [main]
+    branches: [ main ]
 
 jobs:
   build:
@@ -18,7 +19,6 @@ jobs:
         run: |
           npm install
           npm run build
-
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -36,7 +36,6 @@ jobs:
           VERSION=$(echo ${{ github.sha }} | cut -c1-8)
           echo VERSION=$VERSION
           echo "::set-output name=version::$VERSION"
-
       - name: Build, tag, and push image to Amazon ECR
         id: image-info
         env:
@@ -48,30 +47,28 @@ jobs:
           echo "::set-output name=image_tag::$IMAGE_TAG"
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
       - name: Setup Kustomize
         uses: imranismail/setup-kustomize@v1
 
       - name: Checkout kustomize repository
         uses: actions/checkout@v2
         with:
-          repository: sghaha/k8s-manifest-repo
+          repository: sghaha/manifest-repo
           ref: main
           token: ${{ secrets.ACTION_TOKEN }}
-          path: k8s-manifest-repo
+          path: manifest-repo
 
       - name: Update Kubernetes resources
         run: |
           echo ${{ steps.login-ecr.outputs.registry }}
           echo ${{ steps.image-info.outputs.ecr_repository }}
           echo ${{ steps.image-info.outputs.image_tag }}
-          cd k8s-manifest-repo/overlays/dev/
+          cd manifest-repo/overlays/dev/
           kustomize edit set image ${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.ecr_repository }}=${{ steps.login-ecr.outputs.registry}}/${{ steps.image-info.outputs.ecr_repository }}:${{ steps.image-info.outputs.image_tag }}
           cat kustomization.yaml
-
       - name: Commit files
         run: |
-          cd k8s-manifest-repo
+          cd manifest-repo
           git config --global user.email "sghaha@naver.com"
           git config --global user.name "sghaha"
           git commit -am "Update image tag"
