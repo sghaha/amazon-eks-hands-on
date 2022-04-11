@@ -196,16 +196,18 @@ aws iam attach-user-policy --user-name github-action-{내아이디} --policy-arn
 github action이 빌드된 myapp 을 docker image 로 만들어 ECR로 push 하는데
 aws credential을 사용합니다.
 
-그래서 gitbhub-action이라는 iam user 만든것이고
+그래서 gitbhub-action-{내아이디}이라는 iam user 만든것이고
 이 유저의 access key랑 secret key 만들것입니다.
 
 ```
-aws iam create-access-key --user-name github-action
+aws iam create-access-key --user-name github-action-{내아이디}
 ```
 
+aws iam create-access-key --user-name github-action-sghaha
+
 * 결과 에시
-* 주의 1) "SecretAccessKey", "AccessKeyId"값을 따로 메모 저장
-* 주의 2) 이 두 값이 노출되면 큰일남
+* 주의 1) "SecretAccessKey", "AccessKeyId"값을 따로 메모 저장, 꼭 저장
+* 주의 2) 이 두 값이 노출되면 큰일남, 엄청 큰일남
 ```
 {
     "AccessKey": {
@@ -220,10 +222,10 @@ aws iam create-access-key --user-name github-action
 
 #### 7.5.2 github secret 설정
 
-- front-app-repo 레파지토리로 돌아가 Settings > Secrets > actions
+- myapp-repo 레파지토리로 돌아가 Settings > Secrets > actions
 - New repository secret 클릭
 - Name : ACTION_TOKEN
-- value : personal access token 값
+- value : personal access token 값 (처음에 저장해놓은 github 토큰값)
 - Add secret 클릭
 
 
@@ -255,71 +257,20 @@ mkdir -p ./.github/workflows
 
 
 #### 7.6.2 github action 이 사용할 build.yaml 생성
-- myapp 을 checkout 하고, build 한 다음, 
-- docker container 로 만들어 ECR 로 push 하는 과정을 담고 있는 github action build 스크립트를 작성 합니다.
+- myapp 을 checkout 하고, build 한 다음, docker container 로 만들어 ECR 로 push 하는 과정을 담고 있는 github action build 스크립트를 작성 합니다.
 
 ```
 cd ~/environment/myapp-repo/.github/workflows
 ```
 
+- build.yaml을 다운받자
+```
+wget -O build.yaml https://github.com/sghaha/amazon-eks-hands-on/blob/main/file/build.yaml?raw=true
+```
+- 위 명령어가 잘 안먹으면 https://github.com/sghaha/amazon-eks-hands-on/blob/main/file/build.yaml 이걸 브라우저에 치고 나온결과물을 복사 해서 build.yaml파일로 만들자
+
 - 주의) 계정명, 리전명, repo명 등을 확인하자
-```
-cat > build.yaml <<EOF
 
-
-name: Build Front
-
-on:
-  push:
-    branches: [ main ]
-
-jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout source code
-        uses: actions/checkout@v2
-
-      - name: Check Node v
-        run: node -v
-
-      - name: Build front
-        run: |
-          npm install
-          npm run build
-
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ap-northeast-2
-
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
-
-      - name: Get image tag(verion)
-        id: image
-        run: |
-          VERSION=$(echo ${{ github.sha }} | cut -c1-8)
-          echo VERSION=$VERSION
-          echo "::set-output name=version::$VERSION"
-
-      - name: Build, tag, and push image to Amazon ECR
-        id: image-info
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: myapp-repo
-          IMAGE_TAG: ${{ steps.image.outputs.version }}
-        run: |
-          echo "::set-output name=ecr_repository::$ECR_REPOSITORY"
-          echo "::set-output name=image_tag::$IMAGE_TAG"
-          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
-          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
-
-EOF
-```
 
 #### 7.6.3 깃헙에 Push
 * 만들어진 build.yaml을 push하면 깃헙에서 action이 수행됩니다.
