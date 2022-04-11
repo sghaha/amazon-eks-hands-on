@@ -269,12 +269,20 @@ wget -O build.yaml https://github.com/sghaha/amazon-eks-hands-on/blob/main/file/
 ```
 - 위 명령어가 잘 안먹으면 https://github.com/sghaha/amazon-eks-hands-on/blob/main/file/build.yaml 이걸 브라우저에 치고 나온결과물을 복사 해서 build.yaml파일로 만들자
 
-- 주의) 계정명, 리전명, repo명 등을 확인하자
+- 27라인 : aws-region: ap-northeast-2 을 나의 리전에 맞추어주고
+- 56라인 : repository: sghaha/manifest-repo을 repository: {내깃헙아이디}/manifest-repo로 바꾸어 주고
+- 59라인 : path: k8s-manifest-repo이것도 path: manifest-repo이걸로 바꾸어주고
+- 72라인 : git config --global user.email "{내메일주소}"
+- 73라인 : git config --global user.name "{내깃헙아이디}"
+
+
+
 
 
 #### 7.6.3 깃헙에 Push
 * 만들어진 build.yaml을 push하면 깃헙에서 action이 수행됩니다.
-
+* 깃헙 해당 repository- action클릭 해서 수행되는 걸 확인합니다.
+* 아직까지는 ECR에 이미지 올리는것까지만 성공하고 fail이 날겁니다.
 
 
 
@@ -291,6 +299,13 @@ wget -O build.yaml https://github.com/sghaha/amazon-eks-hands-on/blob/main/file/
 ```
 cd ~/environment
 ```
+
+```
+git clone https://github.com/sghaha/manifest-repo.git
+```
+
+
+
 ```
 mkdir -p ./manifest-repo/base
 ```
@@ -298,10 +313,10 @@ mkdir -p ./manifest-repo/base
 mkdir -p ./manifest-repo/overlays/dev
 ```
 ```
-cd ../manifest-repo/base
+cd manifest-repo/base
 ```
 
-* 중간에 내 ecr주소로 바꾸어서 명령어 실행
+- 중간에 리전을 내 리전에 맞게 변경
 ```
 cat <<EOF> myapp-deployment.yaml
 ---
@@ -322,7 +337,7 @@ spec:
     spec:
       containers:
         - name: myapp
-          image: {내ecr주소}.dkr.ecr.ap-northeast-2.amazonaws.com/myapp-repo:latest
+          image: ${ACCOUNT_ID}.dkr.ecr.ap-northeast-2.amazonaws.com/myapp-repo:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -428,15 +443,15 @@ spec:
 EOF
 ```
 
-* 중간에 내 ecr주소로 바꿀것
+* 중간에 내 리전으로 바꿀것
 
 ```
 cat <<EOF> kustomization.yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 images:
-- name: {내 ecr주소}.dkr.ecr.ap-northeast-2.amazonaws.com/myapp-repo
-  newName: {내 ecr주소}.dkr.ecr.ap-northeast-2.amazonaws.com/myapp-repo
+- name: ${ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/myapp-repo
+  newName: ${ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/myapp-repo
   newTag: aa68ef2e
 resources:
 - ../../base
@@ -446,21 +461,13 @@ patchesStrategicMerge:
 EOF
 ```
 
+#### 7.7.3 푸시
+해당 작업된것들을 깃헙에 푸시한다.
 
+#### 7.7.4 github Action 재가동
+* 깃헙 myapp-repo 들어가서 action클릭, 아까 실패한 job클릭, re-run all jobs. 클릭
+* 여기까지 잘 따라왔다면 이제 job이 성공할것이다.
 
-### 7.8 Kustomize를 위한 github
-#### 7.8.1 manifest-repo 이름으로 깃헙 repo 생성
-#### 7.8.2 소스 push
-* 중간에 내 깃험 주소로 변경하자
-```
-cd ~/environment/manifest-repo/
-git init
-git add .
-git commit -m "first commit"
-git branch -M main
-git remote add origin https://github.com/sghaha/manifest-repo.git
-git push -u origin main
-```
 
 
 ### 7.9 ArgoCD
