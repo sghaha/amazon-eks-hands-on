@@ -3,6 +3,7 @@
 
 - GitHub Actions, Kustomize, ArgoCD를 이용한다
 - GitHub Actions은 스크립트 실행시간 한달 2000분까지 무료이니 고려하자.
+- 아마 이 실습을 진행하다보면 노드2개로는 파드 공간이 부족할것입니다. 하지만 노드 오토스케일링을 이전 장에서 진행했다면 자동으로 노드가 스케일 아웃됩니다.
 
 
 ### 7.0 github 토큰 생성
@@ -468,6 +469,9 @@ EOF
 * 깃헙 myapp-repo 들어가서 action클릭, 아까 실패한 job클릭, re-run all jobs. 클릭
 * 여기까지 잘 따라왔다면 이제 job이 성공할것이다.
 
+* 이제 push를 하면 myapp-repo의 변경점을 포함한 형상을 도커 이미지로 만들고, 그걸 나의 ecr에 푸시하고, kustomization에 해당 ecr 이미지의 태그를 넣어준다.
+
+
 
 
 ### 7.9 ArgoCD
@@ -526,6 +530,11 @@ echo $ARGO_PWD
 * repositrories 클릭
 * Connect Repo using https 클릭
 * url이랑 id/pw쓰고 커넥트
+```
+url은 manifest-repo의 url (ex: https://github.com/sghaha/manifest-repo)
+id는 내 깃헙 아이디
+pw는 토큰
+```
 
 #### 7.9.8 ArgoCD 설정 1
 * 좌측 겹쳐있는 아이콘이 어플리케이션 설정 메뉴. 클릭하자
@@ -548,97 +557,83 @@ echo $ARGO_PWD
 * 이렇게 하고 Create 클릭함
 
 
-
-### 7.10 github action 추가
-#### 7.10.1 설명
-```
-github action 빌드 스크립트 수정
-
-스크립트에 kustomize를 이용하여 컨테이너 image tag 정보를 업데이트 한 후 
-**manifest-repo**에 commit/push 하는 단계를 추가 해야 합니다.
-
-추가된 단계가 정상적으로 동작 하면, 
-ArgoCD가 **manifest-repo**를 지켜 보고 있다가 
-새로운 변경 사항이 발생 되었음을 알아채고, 
-
-kustomize build 작업을 수행하여 
-새로운 kubernetes manifest (*새로운 image tag를 포함한)를 eks 클러스터에 배포 합니다.
-```
-
-
-#### 7.10.2 Kustomize 빌드 단계 추가
-```
-cd ~/environment/myapp-repo/.github/workflows
-```
-
-*중간중간 깃험 아이디와 이메일 관련 된것 본인걸로 바꾸고 징행
-```
-cat <<EOF>> build.yaml
-
-      - name: Setup Kustomize
-        uses: imranismail/setup-kustomize@v1
-
-      - name: Checkout kustomize repository
-        uses: actions/checkout@v2
-        with:
-          repository: {내 깃헙 아이디}/manifest-repo
-          ref: main
-          token: \${{ secrets.ACTION_TOKEN }}
-          path: manifest-repo
-
-      - name: Update Kubernetes resources
-        run: |
-          echo \${{ steps.login-ecr.outputs.registry }}
-          echo \${{ steps.image-info.outputs.ecr_repository }}
-          echo \${{ steps.image-info.outputs.image_tag }}
-          cd manifest-repo/overlays/dev/
-          kustomize edit set image \${{ steps.login-ecr.outputs.registry}}/\${{ steps.image-info.outputs.ecr_repository }}=\${{ steps.login-ecr.outputs.registry}}/\${{ steps.image-info.outputs.ecr_repository }}:\${{ steps.image-info.outputs.image_tag }}
-          cat kustomization.yaml
-
-      - name: Commit files
-        run: |
-          cd manifest-repo
-          git config --global user.email "{내 깃헙 이메일}"
-          git config --global user.name "{내깃헙 아이디}"
-          git commit -am "Update image tag"
-          git push -u origin main
-
-EOF
-```
-
-
-#### 7.10.3 push
-```
-cd ~/environment/myapp-repo
-```
-```
-git add .
-```
-```
-git commit -m "Add kustomize image edit"
-```
-```
-git push -u origin main
-```
-
-
-
-### 7.11 확인
-#### 7.11.1 github action 확인
-* myapp-repo의 action에서 Job 잘 동작하는지 확인
-#### 7.11.2 manifest-repo확인
-* 해당 repo들어가서 push된거 있는지 확인
-#### 7.11.3 배포 상태 확인
-```
 ArgoCD 화면으로 돌아가 배포 상태를 확인 합니다. 
-Applications > eksworkshop-cd-pipeline 으로 이동 하여 확인 해보면 
+Applications > myapp-cd-pipeline 으로 이동 하여 확인 해보면 
 CURRENT SYNC STATUS의 값이 Out of Synced 입니다.
 
 git repository 가 변경되면 자동으로 sync 작업이 수행 하도록 하려면 Auto-Sync 를 활성화 해야 합니다. 
 이를 위해 APP DETAILS 로 이동 하여 ENABLE AUTO-SYNC 버튼을 눌러 활성화 합니다.
 ```
 
-#### 7.11.4 반영됐는지 확인
+#### 7.9.11 반영됐는지 확인
+
+파드들이 뜰것입니다.
+
+clou9으로 돌아가 아래 명령어를 날립니다.
+```
+kubectl get pod
+```
+
+* 결과예시) 노드가 2개밖에 없어서 처음엔 파드가 팬딩 상태입니다
+```
+NAME                                    READY   STATUS    RESTARTS   AGE
+myapp-57fc49c469-5h5cb                  0/1     Pending   0          90s
+myapp-57fc49c469-x8l7d                  0/1     Pending   0          90s
+sample-nodejs-backend-578855f99-zkdss   1/1     Running   0          3d7h
+sample-react-app-54779f7fc7-cpcrp       1/1     Running   0          3d6h
+sample-react-app-54779f7fc7-qv4s5       1/1     Running   0          3d6h
+```
+
+* 하지만 시간이 지나면 노드가 하나 더 자동으로 스케일 아웃되고 아래와 같이 파드가 러닝상태로 바뀝니다.
+```
+NAME                                    READY   STATUS    RESTARTS   AGE
+myapp-57fc49c469-5h5cb                  1/1     Running   0          2m47s
+myapp-57fc49c469-x8l7d                  1/1     Running   0          2m47s
+sample-nodejs-backend-578855f99-zkdss   1/1     Running   0          3d7h
+sample-react-app-54779f7fc7-cpcrp       1/1     Running   0          3d6h
+sample-react-app-54779f7fc7-qv4s5       1/1     Running   0          3d6h
+```
+
+
+
+#### 7.9.12 myapp ingress 설정
+
+```
+cd /home/ec2-user/environment/manifests
+```
+
+```
+cat <<EOF> myapp-deployment-patch.yaml
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+    name: "myapp-ingress"
+    namespace: default
+    annotations:
+      kubernetes.io/ingress.class: alb
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/target-type: ip
+spec:
+    rules:
+    - http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: "myapp"
+                port:
+                  number: 80
+EOF               
+```
+
+
+
+
+
+
+
 ```
  **manifest-repo**의 commit history를 통해 변경된 Image Tag 정보를 확인 합니다.
 
