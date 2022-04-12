@@ -1,20 +1,71 @@
-
-
-
-
 # 9. Logging (EFK)
+
+- 지금까지 t2.small로 실습을 진행했는데, 이번실습을 진행하다보면 메모리 부족현상이 생겨서 노드 크기를 늘린 노드그룹으로 옮길것입니다.
+
+
+### 9.0 노드 그룹 옮기기
+
+#### 9.0.1 클러스터 yaml 수정
+- eks-demo-cluster.yaml의 일부를 아래와 같이 수정합니다. 
+- 노드그룹의 이름을 바꾸고, t3.large타입으로 바꾸고, 노드는 2개 띄울것입니다.
+```
+  - name: node-group-v2
+    instanceType: t3.large
+    desiredCapacity: 2
+```
+
+```
+eksctl create nodegroup --config-file eks-demo-cluster.yaml
+```
+
+- 20분 정도 기다리면 노드가 하나 더 뜹니다.
+- eks콘솔 > 클러스터 클릭 > 구성 > 컴퓨팅 클릭하면 노드가 더 뜬걸 볼수 있음
+
+
+#### 9.0.2 기존 노드 죽이고 파드를 새 노드로 옮기기
+
+- 사실 이방식 대로 하면 무중단 운영이 안됩니다. (몇분 장애가 납니다.) 그러나 실습이기 때문에 그냥 진행합니다.
+
+- ec2 콘솔 > 오토스케일링 그룹 > 기존노드의 as그룹 선택 > 편집 > 원하는 용량 : 0, 최소용량 :0, 최대 용량 0
+
+- 몇분뒤 모든 파드들이 새 노드로 옮겨집니다.
+
+
+#### 9.0.3 기존 노드 삭제
+- eks콘솔 > 클러스터 클릭 > 구성 > 컴퓨팅 > 기존노드 클릭 > 삭제 
+    
+    
+    
 
 ### 9.1 elasticsearch
 
 #### 9.1.1 yaml파일 다운로드
 ```
+cd ~/environment/manifests
+```
+
+```
 wget -O elasticsearch.yaml https://github.com/sghaha/amazon-eks-hands-on/blob/main/file/elasticsearch.yaml?raw=true
 ```
+- 위 명령어가 404나던가 하면 그냥 https://github.com/sghaha/amazon-eks-hands-on/blob/main/file/elasticsearch.yaml을 브라우저에서 쳐서 복사하자
+
+
+#### 9.1.1 헬름 repo 추가
+```
+helm repo add elastic https://helm.elastic.co
+```
+
 
 #### 9.1.2 elasticsearch 설치
 ```
 kubectl apply -f elasticsearch.yaml
 ```
+
+```
+helm install elasticsearch elastic/elasticsearch
+```
+
+helm uninstall elasticsearch elastic/elasticsearch
 
 
 #### 9.1.3 확인	
