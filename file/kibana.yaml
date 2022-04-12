@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: kibana
-        image: elastic/kibana:8.1.0
+        image: elastic/kibana:7.17.1
         env:
         - name: SERVER_NAME
           value: "kibana.kubenetes.example.com"
