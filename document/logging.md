@@ -1,5 +1,5 @@
 # 9. Logging (EFK)
-
+- 참고 : https://hanjustudy.tistory.com/35
 - 지금까지 t2.small로 실습을 진행했는데, 이번실습을 진행하다보면 메모리 부족현상이 생겨서 노드 크기를 늘린 노드그룹으로 옮길것입니다.
 
 
@@ -39,7 +39,9 @@ eksctl create nodegroup --config-file eks-demo-cluster.yaml
 
 ### 9.1 elasticsearch
 
-#### 9.1.1 yaml파일 다운로드
+
+
+#### 9.1.1 yaml 다운로드
 ```
 cd ~/environment/manifests
 ```
@@ -47,25 +49,18 @@ cd ~/environment/manifests
 ```
 wget -O elasticsearch.yaml https://github.com/sghaha/amazon-eks-hands-on/blob/main/file/elasticsearch.yaml?raw=true
 ```
+
 - 위 명령어가 404나던가 하면 그냥 https://github.com/sghaha/amazon-eks-hands-on/blob/main/file/elasticsearch.yaml을 브라우저에서 쳐서 복사하자
 
 
-#### 9.1.1 헬름 repo 추가
-```
-helm repo add elastic https://helm.elastic.co
-```
-
 
 #### 9.1.2 elasticsearch 설치
+
+
 ```
 kubectl apply -f elasticsearch.yaml
 ```
 
-```
-helm install elasticsearch elastic/elasticsearch
-```
-
-helm uninstall elasticsearch elastic/elasticsearch
 
 
 #### 9.1.3 확인	
@@ -80,6 +75,28 @@ kubectl get svc
 에서 나온 alb주소로 9200포트로 들어간다
 
 
+* 결과 예시
+```
+{
+name: "7en---RO",
+cluster_name: "docker-cluster",
+cluster_uuid: "kgIY4TXQS-----yZWUA",
+version: {
+number: "6.4.0",
+build_flavor: "default",
+build_type: "tar",
+build_hash: "59----e",
+build_date: "2018-08-17T23:18:47.308994Z",
+build_snapshot: false,
+lucene_version: "7.4.0",
+minimum_wire_compatibility_version: "5.6.0",
+minimum_index_compatibility_version: "5.0.0"
+},
+tagline: "You Know, for Search"
+}
+```
+
+
 
 ### 9.2 kibana
 
@@ -87,6 +104,11 @@ kubectl get svc
 ```
 wget -O kibana.yaml https://github.com/sghaha/amazon-eks-hands-on/blob/main/file/kibana.yaml?raw=true
 ```
+- 404 에러가 난다거나 하면 그냥 인터넷 브라우저에서 본다음에 복붙하자
+
+- 그리고 http://elasticsearch-svc.default.svc.cluster.local:9200 이부분을 나의 elasticsearch 주소로 바꾸어주자
+
+
 
 #### 9.2.2 kibana 설치
 ```
@@ -107,7 +129,7 @@ kubectl get svc
 
 
 
-### 9.3 fluentd-bit 설치
+### 9.3 fluent-bit 설치
 
 #### 9.3.1 yaml파일 다운로드
 ```
