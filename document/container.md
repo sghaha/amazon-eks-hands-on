@@ -71,13 +71,15 @@ docker build -t sample-nodejs-backend .
 ```
 
 #### 2.1.5 이미지 태그 지정
+- 리전명을 본인의 리전으로 맞추어 주어야합니다.
+
 ```
 docker tag sample-nodejs-backend:latest $ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/sample-nodejs-backend:latest
 ```
 
 #### 2.1.6 이미지를 리포지토리에 푸쉬
 - 리전명을 본인의 리전으로 맞추어 주어야합니다.
-- 
+
 ```
 docker push $ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/sample-nodejs-backend:latest
 ```
