@@ -226,7 +226,6 @@ cd ~/environment/manifests/
 
 
 #### 5.2.7 deloy manifest 생성	
-- 아래 ap-northeast-1부분을 자신의 리전에 맞게 변경해야합니다.
 
 ```
 cat <<EOF> frontend-deployment.yaml
@@ -248,7 +247,7 @@ spec:
     spec:
       containers:
         - name: sample-react-app
-          image: $ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/sample-react-app:latest
+          image: $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/sample-react-app:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80
