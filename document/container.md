@@ -139,6 +139,7 @@ cd ~/environment/
 ```
 git clone https://github.com/sghaha/sample-react-app.git
 ```
+```
 cd sample-react-app
 ```
 ```
