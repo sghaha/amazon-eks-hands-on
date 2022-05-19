@@ -4,7 +4,7 @@
 #### 1.1.1 AWS Cloud9으로 IDE 구성
 - Cloud9 console > Create environment
 - Name 입력 > next step
-- Instance type : t3.small, platform : Amazon Linux 2 > next step > Create environment
+- Instance type : t3.small(t2.micro도 ), platform : Amazon Linux 2 > next step > Create environment
 
 #### 1.1.2 IAM Role 생성
 Administrator access 정책을 가진 IAM Role을 생성
