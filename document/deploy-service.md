@@ -10,7 +10,6 @@ cd ~/environment/manifests/
 
 
 #### 5.1.2 deloy manifest 생성	
-- 아래 ap-northeast-1부분을 자신의 리전에 맞게 변경해야합니다.
 
 ```
 cat <<EOF> backend-deployment.yaml
