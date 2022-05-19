@@ -145,6 +145,9 @@ cd sample-react-app
 ```
 npm install
 ```
+```
+mkdir build
+```
 
 #### 2.2.2 이미지 리포지토리를 생성
 ```
