@@ -32,7 +32,7 @@ spec:
     spec:
       containers:
         - name: sample-nodejs-backend
-          image: $ACCOUNT_ID.dkr.ecr.ap-northeast-1.amazonaws.com/sample-nodejs-backend:latest
+          image: $ACCOUNT_ID.dkr.ecr.$AWS_REGION.amazonaws.com/sample-nodejs-backend:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
