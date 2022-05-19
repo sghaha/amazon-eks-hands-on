@@ -21,7 +21,9 @@ Administrator access 정책을 가진 IAM Role을 생성
 #### 1.1.4 IDE에서 IAM 설정 업데이트
 - AWS Cloud9 credentials 비활성화하고 IAM Role을 붙임(해당 credentials는 EKS IAM authentication과 호환되지 않음)
 - Cloud9 IDE > 우측 상단 기어 아이콘 클릭 > AWS SETTINGS in the sidebar > Credentials > Disable the AWS managed temperature credits 
-- 기존의 자격 증명 파일도 제거
+
+
+기존의 자격 증명 파일도 제거
 ```
 rm -vf ${HOME}/.aws/credentials
 ```
