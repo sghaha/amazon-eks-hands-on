@@ -10,6 +10,9 @@ cd ~/environment/
 git clone https://github.com/sghaha/sample-nodejs-backend.git
 ``` 
 ```
+cd sample-nodejs-backend
+``` 
+```
 npm install
 ```
 
