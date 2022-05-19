@@ -115,6 +115,7 @@ wget https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-control
 
 #### 4.1.7 yaml 파일에서 클러스터의 cluster-name을 eks-demo으로 편집
 
+- 아래 vi 명령을 안하고 그냥 cloud9상에서 수정해도됩니다.
 ```
 vi v2_2_1_full.yaml
 ```
