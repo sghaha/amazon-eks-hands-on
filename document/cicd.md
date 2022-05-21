@@ -210,9 +210,8 @@ aws credential을 사용합니다.
 aws iam create-access-key --user-name github-action-{내아이디}
 ```
 
-aws iam create-access-key --user-name github-action-sghaha
 
-* 결과 에시
+* 결과 예시
 * 주의 1) "SecretAccessKey", "AccessKeyId"값을 따로 메모 저장, 꼭 저장
 * 주의 2) 이 두 값이 노출되면 큰일남, 엄청 큰일남
 ```
