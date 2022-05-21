@@ -109,8 +109,11 @@ aws iam create-user --user-name github-action-{내아이디}
 ```
 
 #### 7.4.3 ECR policy 생성
-* 주의사항 1) 아래 명령어 날리기 전에 myapp-repo라는 ecr을 생성한다. ecr콘솔가서 생성, 프라이빗, 푸시할떄 스캔
-#### ecr을 생성하고 아래 명령어를 날린다
+
+* 레포지토리 생성
+eks콘솔 > ecr > 레포지토리 생성 > 프라이빗, 레포지토리이름 :myapp-repo,  푸시할 때 스캔 활성화
+
+
 
 ```
 cd ~/environment
