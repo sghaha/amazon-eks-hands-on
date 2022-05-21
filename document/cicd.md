@@ -52,7 +52,7 @@ git clone https://github.com/{내깃헙아이디}/myapp-repo.git
 #### 7.3.1 파일 복사
 - 혹시 숨김파일은 안보이게 설정되있을 수 있으니, cloud9파일 리스트 바로 위에 설정 클릭하고 show hidden files클릭하자
 
-- sample-react-app 디렉토리에 있는 파일을 node_module빼고 전부 myapp-repo디렉토리에 복사하자
+#### sample-react-app 디렉토리에 있는 파일을 .git / node_module빼고 전부 myapp-repo디렉토리에 복사하자, 그후 아래 명령어 수행
 
 ```
 cd ~/environment/myapp-repo
