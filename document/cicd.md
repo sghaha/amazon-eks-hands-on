@@ -448,15 +448,14 @@ spec:
 EOF
 ```
 
-* 중간에 내 리전으로 바꿀것
 
 ```
 cat <<EOF> kustomization.yaml
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 images:
-- name: ${ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/myapp-repo
-  newName: ${ACCOUNT_ID}.dkr.ecr.ap-northeast-1.amazonaws.com/myapp-repo
+- name: ${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/myapp-repo
+  newName: ${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/myapp-repo
   newTag: aa68ef2e
 resources:
 - ../../base
