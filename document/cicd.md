@@ -131,7 +131,7 @@ cat <<EOF> ecr-policy.json
                 "ecr:UploadLayerPart",
                 "ecr:CompleteLayerUpload"
             ],
-            "Resource": "arn:aws:ecr:ap-northeast-1:${ACCOUNT_ID}:repository/myapp-repo"
+            "Resource": "arn:aws:ecr:${AWS_REGION}:${ACCOUNT_ID}:repository/myapp-repo"
         },
         {
             "Sid": "GetAuthorizationToken",
