@@ -322,7 +322,6 @@ mkdir -p ./manifest-repo/overlays/dev
 cd manifest-repo/base
 ```
 
-- 중간에 리전을 내 리전에 맞게 변경
 ```
 cat <<EOF> myapp-deployment.yaml
 ---
@@ -343,7 +342,7 @@ spec:
     spec:
       containers:
         - name: myapp
-          image: ${ACCOUNT_ID}.dkr.ecr.ap-northeast-2.amazonaws.com/myapp-repo:latest
+          image: ${ACCOUNT_ID}.dkr.ecr.${AWS_REGION}.amazonaws.com/myapp-repo:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80
