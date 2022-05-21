@@ -307,7 +307,7 @@ cd ~/environment
 ```
 
 ```
-git clone https://github.com/sghaha/manifest-repo.git
+git clone https://github.com/{}/manifest-repo.git
 ```
 
 
