@@ -58,7 +58,7 @@ git clone https://github.com/{내깃헙아이디}/myapp-repo.git
 cd ~/environment/myapp-repo
 ```
 ```
-npm insll
+npm install
 ```
 ```
 npm run build
