@@ -137,7 +137,7 @@ wget -O fluent-bit.yaml https://github.com/sghaha/amazon-eks-hands-on/blob/main/
 ```
 
 #### 9.3.2 yaml파일 수정
-```
+
 FLUENT_ELASTICSEARCH_HOST의 value를 나의 일레스틱서치 alb주소로 바꾸자
 * http://빼고 넣자
 
