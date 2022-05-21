@@ -466,7 +466,7 @@ EOF
 ```
 
 #### 7.7.3 푸시
-해당 작업된것들을 깃헙에 푸시한다.
+해당 작업된것들을 깃헙에 푸시한다. (나의 myapp-repo)
 
 #### 7.7.4 github Action 재가동
 * 깃헙 myapp-repo 들어가서 action클릭, 아까 실패한 job클릭, re-run all jobs. 클릭
