@@ -68,14 +68,16 @@ npm run build
 
 
 
-#### 7.3.2 push
-* push전 확인할 것 1) 푸시할 전체 파일은 약 25개입니다. 너무 많으면 잘못하고 계신겁니다.
-* push전 확인할 것 2) .dockeringnore .gitingnore파일이 포함되어있는지 확인합시다. 없다면 아마 파일이 전부 복사 된것이 아닙니다.
-* push전 확인할 것 3) nginx.conf의 proxy_pass가 나의 backend alb주소를 가리키고 있는지 확인합시다.
+#### 7.3.2 내 깃허브에 push 전 확인할 사항
+* 1) 푸시할 전체 파일은 약 25개입니다. 너무 많으면 잘못하고 계신겁니다.
+* 2) .dockeringnore .gitingnore파일이 포함되어있는지 확인합시다. 없다면 아마 파일이 전부 복사 된것이 아닙니다.
+* 3) nginx.conf의 proxy_pass가 나의 backend alb주소를 가리키고 있는지 확인합시다.
 
-* cloud9 왼쪽의 깃 아이콘을 클릭한후 커밋 & push하자
-* 커밋은 Changes에서 + 버튼누르고 메시지 입력후 컨트롤+엔터 하면되고
-* 푸시는 레포지토리 옆에 말풍선같은 아이콘 클릭후 push를 누른다음에 push하고싶은 repo를 클릭후 id/pw를 입력하면 된다
+#### 7.3.3 내 깃허브에 push
+* cloud9 왼쪽의 깃 아이콘(sourcecontrol)을 클릭
+* myapp-repo에 change로 약 25개 파일이 뜰겁니다.
+* 커밋을 합니다 ::: Changes에서 + 버튼누르고 메시지 입력후 컨트롤+엔터
+* 푸시는 레포지토리 옆에 말풍선같은 아이콘 클릭후 push를 누른다음에 push하고싶은 repo를 클릭후 id/pw를 입력하면 된다 (id는 나의 깃헙 아이디, pw는 토큰)
 
 * 제대로 되면 나의 깃헙 레포지토리에 푸시가 된것을 확인할 수 있다.
 
