@@ -110,7 +110,7 @@ aws iam create-user --user-name github-action-{내아이디}
 
 #### 7.4.3 ECR policy 생성
 
-#### 레포지토리 생성
+- 레포지토리 생성
 eks콘솔 > ecr > 레포지토리 생성 > 프라이빗, 레포지토리이름 :myapp-repo,  푸시할 때 스캔 활성화
 
 
