@@ -158,13 +158,13 @@ kubectl apply -f fluent-bit.yaml
 ```
 kubectl get pod -n logging
 ```
-* 노드의 숫자만큼 파드가 뜬다고한다.
+* 노드의 숫자만큼 파드가 뜬다
 
 
 
-###9.4 kibana에서 확인
+### 9.4 kibana에서 확인
 
-####9.4.1 인덱스 패던 만들기
+#### 9.4.1 인덱스 패던 만들기
 * 키바나 콘솔 접근후 왼쪽 Management - index pattern
 * 인덱스 패턴에 melon-* 하고 next step
 * @timestamp 선택하고 create pattern
