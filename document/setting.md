@@ -49,11 +49,10 @@ aws --version
 
 ### 1.3 kubectl
 #### 1.3.1 kubectl 설치
-- 배포할 Amazon EKS 버전과 상응하는 kubectl를 설치 (5월 21일 변경사항 : k8s버전을 1.22로 올려서 kubectl 버전도 )
   https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html
 ```
 sudo curl -o /usr/local/bin/kubectl  \
-   https://s3.us-west-2.amazonaws.com/amazon-eks/1.22.6/2022-03-09/bin/linux/amd64/kubectl
+   https://amazon-eks.s3.us-west-2.amazonaws.com/1.21.2/2021-07-05/bin/linux/amd64/kubectl
 ```
 ```
 sudo chmod +x /usr/local/bin/kubectl
