@@ -12,7 +12,7 @@ mkdir manifests
 cd manifests
 ```
 
-* 5월 21일 변경사항 : k8s버전을 1.21에서 1.22로 올렸습니다.
+
 ```
 cat << EOF > eks-demo-cluster.yaml
 ---
@@ -22,7 +22,7 @@ kind: ClusterConfig
 metadata:
   name: eks-demo # 생성할 EKS 클러스터명
   region: ${AWS_REGION} # 클러스터를 생성할 리전
-  version: "1.22"
+  version: "1.21"
 
 vpc:
   cidr: "192.168.0.0/16" # 클러스터에서 사용할 VPC의 CIDR
