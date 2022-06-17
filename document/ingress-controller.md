@@ -154,7 +154,8 @@ kubectl get deployment -n kube-system aws-load-balancer-controller
 ```
 
 
-- 결과 예시
+- 결과 예시 (Ready 부분에 1/1이라고 떠야합니다.)
+
 ```
 NAME                           READY   UP-TO-DATE   AVAILABLE   AGE
 aws-load-balancer-controller   1/1     1            1           49s
