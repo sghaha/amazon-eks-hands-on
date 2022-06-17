@@ -119,6 +119,7 @@ wget https://raw.githubusercontent.com/kubernetes-sigs/aws-load-balancer-control
 ```
 vi v2_2_1_full.yaml
 ```
+- 796라인 근처
 ```
 spec:
     containers:
