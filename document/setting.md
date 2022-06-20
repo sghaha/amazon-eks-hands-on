@@ -13,6 +13,8 @@ Administrator access 정책을 가진 IAM Role을 생성
 - AdministratorAccess 검색후 선택, next
 - Role Name에 "HandsOn-Admin-본인아이디"를 적어주자 그리고 create
 - ******[주의] : 아이디에 . 이들어가면 오류가 일어날수있습니다.******
+- ******[주의] : 아이디에 . 이들어가면 오류가 일어날수있습니다.******
+- ******[주의] : 아이디에 . 이들어가면 오류가 일어날수있습니다.******
 
 #### 1.1.3 AWS Cloud9 Instance에 IAM Role 부여
 - EC2 instnace console > Select AWS Cloud9 instance
