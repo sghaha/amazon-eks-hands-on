@@ -9,6 +9,6 @@
 ### 5. [서비스 배포](https://github.com/sghaha/amazon-eks-hands-on/blob/main/document/deploy-service.md)
 ### 6. [Autoscaling Pod & Cluster](https://github.com/sghaha/amazon-eks-hands-on/blob/main/document/scaling.md)
 ### 7. [CI/CD for EKS Cluster](https://github.com/sghaha/amazon-eks-hands-on/blob/main/document/cicd.md)
-### 8. [Monitoring](https://github.com/sghaha/amazon-eks-hands-on/blob/main/document/monitoring.md)
+### 8. [Monitoring](https://github.com/sghaha/amazon-eks-hands-on/blob/main/document/monitoring.md) - 
 ### 9. [Logging](https://github.com/sghaha/amazon-eks-hands-on/blob/main/document/logging.md)
 ### 10. [실습 후 리소스 정리](https://github.com/sghaha/amazon-eks-hands-on/blob/main/document/removing.md)
