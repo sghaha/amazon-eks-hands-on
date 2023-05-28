@@ -26,6 +26,7 @@ cd manifests
 
 * 아래 <eks-demo>는 내가 만들고 싶은 eks의 클러스터 명을 적는다
 * 아래 <Private-Subnet-id-1>과 <Private-Subnet-id-2>에는 만들엇진 프라이빗 서브넷 id를 넣는다.
+* 만들어진 서브넷에 따라 ap-northeast-2b아닐수도있으니 이것도 주의
   
 ```
 cat << EOF > eks-demo-cluster.yaml
