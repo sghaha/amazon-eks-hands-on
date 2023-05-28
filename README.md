@@ -1,7 +1,7 @@
 [![Generic badge](https://img.shields.io/badge/language-English-orange.svg)](https://github.com/seochan2/amazon-eks-hands-on)
 [![Generic badge](https://img.shields.io/badge/language-Korean-blue.svg)](https://github.com/sghaha/amazon-eks-hands-on)
 # Amazon EKS Hands on
----
+
 ### 1. [환경 구축](https://github.com/sghaha/amazon-eks-hands-on/blob/main/document/setting.md)
 ### 2. [Container Image](https://github.com/sghaha/amazon-eks-hands-on/blob/main/document/container.md)
 ### 3. [EKS Cluster 생성](https://github.com/sghaha/amazon-eks-hands-on/blob/main/document/eks-cluster.md)
@@ -12,6 +12,8 @@
 ### 8. [Monitoring](https://github.com/sghaha/amazon-eks-hands-on/blob/main/document/monitoring.md) - 제외
 ### 9. [Logging](https://github.com/sghaha/amazon-eks-hands-on/blob/main/document/logging.md)
 ### 10. [실습 후 리소스 정리](https://github.com/sghaha/amazon-eks-hands-on/blob/main/document/removing.md)
----
 
-## v2_1. [환경 구축](https://github.com/sghaha/amazon-eks-hands-on/blob/main/document/v2_setting.md)
+
+# Amazon EKS Hands on v2
+
+### 1. [환경 구축](https://github.com/sghaha/amazon-eks-hands-on/blob/main/document/v2_setting.md)
