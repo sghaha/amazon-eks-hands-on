@@ -37,7 +37,7 @@ kind: ClusterConfig
 metadata:
   name: <eks-demo> # 생성할 EKS 클러스터명
   region: ${AWS_REGION} # 클러스터를 생성할 리전
-  version: "1.21"
+  version: "1.26"
 
 vpc:
   subnets:
