@@ -88,19 +88,30 @@ aws-cli/2.11.23 Python/3.11.3 Linux/4.14.314-237.533.amzn2.x86_64 exe/x86_64.amz
 
 
 ### 1.3 kubectl
-#### 1.3.1 kubectl 설치
-  https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html
+#### 1.3.1 kubectl 설치 (1.26)
+https://docs.aws.amazon.com/eks/latest/userguide/install-kubectl.html   
+위 url타고 가서 1.26 설치 부분 따라하자
 ```
-sudo curl -o /usr/local/bin/kubectl  \
-   https://amazon-eks.s3.us-west-2.amazonaws.com/1.21.2/2021-07-05/bin/linux/amd64/kubectl
+curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.26.4/2023-05-11/bin/linux/amd64/kubectl
 ```
 ```
-sudo chmod +x /usr/local/bin/kubectl
+chmod +x ./kubectl
+```
+```
+mkdir -p $HOME/bin && cp ./kubectl $HOME/bin/kubectl && export PATH=$HOME/bin:$PATH
+```
+```
+echo 'export PATH=$HOME/bin:$PATH' >> ~/.bashrc
 ```
 
 - kubectl 설치 확인
 ```
-kubectl version --client=true --short=true
+kubectl version --short --client
+```
+* 결과 예시
+```
+Client Version: v1.26.4-eks-0a21954
+Kustomize Version: v4.5.7
 ```
 
 ### 1.4 etc
