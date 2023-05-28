@@ -14,18 +14,15 @@ Administrator access 정책을 가진 IAM Role을 생성
 - AWS 콘솔 - IAM - ROLE(역할) - Create Role
 - aws service - ec2 선택 후 next
 - AdministratorAccess 검색후 선택, next
-- Role Name에 "HandsOn-Admin-본인아이디"를 적어주자 그리고 create
-- ******[주의] : 아이디에 . 이들어가면 오류가 일어날수있습니다.******
-- ******[주의] : 아이디에 . 이들어가면 오류가 일어날수있습니다.******
-- ******[주의] : 아이디에 . 이들어가면 오류가 일어날수있습니다.******
+- Role Name을 적어주자(ex: sghaha-role-c9-admin) 그리고 create
 
 #### 1.1.3 AWS Cloud9 Instance에 IAM Role 부여
-- EC2 instnace console > Select AWS Cloud9 instance
+- EC2 instnace 콘솔 > Cloud9관련 ec2 클릭
 - Actions(작업) > Security(보안) > Modify IAM Role(IAM 역할 수정)
 - Change IAM role (1.1.2에서 생성한 role)
 
 #### 1.1.4 IDE에서 IAM 설정 업데이트
-- AWS Cloud9 credentials 비활성화하고 IAM Role을 붙임(해당 credentials는 EKS IAM authentication과 호환되지 않음)
+- 설명 : AWS Cloud9 credentials 비활성화하고 IAM Role을 붙임(해당 credentials는 EKS IAM authentication과 호환되지 않음)
 - Cloud9 IDE > 우측 상단 기어 아이콘 클릭 > AWS SETTINGS in the sidebar > Credentials > Disable the AWS managed temperature credits 
 
 
@@ -35,12 +32,16 @@ rm -vf ${HOME}/.aws/credentials
 ```
 - Cloud9 IDE가 올바른 IAM Role을 사용하고 있는지 확인
 ```
-aws sts get-caller-identity --query Arn | grep HandsOn-Admin-본인아이디
+aws sts get-caller-identity
 
 ```
 - 결과 예시
 ```
-arn:aws:sts::876630244803:assumed-role/HandsOn-Admin-sghaha/i-03e9af70279e891de
+{
+    "Account": "000000000000", 
+    "UserId": "AROAYPGKIIIIIZGAYYYYY:i-0436079f403eeeeee", 
+    "Arn": "arn:aws:sts::582392222222:assumed-role/sghaha-role-c9-admin/i-0436079f403eeeeee"
+}
 ```
 
 ### 1.2 AWS CLI
