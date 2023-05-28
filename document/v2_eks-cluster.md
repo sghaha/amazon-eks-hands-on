@@ -67,4 +67,6 @@ cloudWatch:
 
 iam:
   withOIDC: true
+EOF
+
 ```
