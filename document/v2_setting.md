@@ -114,6 +114,15 @@ Client Version: v1.26.4-eks-0a21954
 Kustomize Version: v4.5.7
 ```
 
+#### 1.3.2 kubectl 자동완성
+```
+kubectl completion bash >>  ~/.bash_completion
+. /etc/profile.d/bash_completion.sh
+. ~/.bash_completion
+```
+
+
+
 
 ### 1.4 eksctl
 #### 1.4.1 eksctl 설치(0.142.0)
@@ -172,59 +181,36 @@ brew -v
 ```
 
 
+### 1.7 k9s
+
+#### 1.7.1 k9s 설치
+```
+brew install derailed/k9s/k9s
+```
 
 
-
-
----
-
-
-### 1.4 etc
-#### 1.4.1 jq 설치
-- json을 다루는 유틸리티
+### 1.8 helm
+#### 1.8.1 helm 설치
 ```
-sudo yum install -y jq
-```
-#### 1.4.2 bash-completion 설치
-- 쉘에 completion script를 소싱하면 kubectl 명령어의 자동 완성을 가능하게 만들 수 있습니다. 
-하지만 이런 completion script는 bash-completion에 의존하기 때문에 아래의 명령어를 통해, bash-completion 을 설치해야 합니다.
-```
-sudo yum install -y bash-completion
+brew install helm
 ```
 
-### 1.5 eksctl 설치
-#### 1.5.1 eksctl 설치
-- 최신의 eksctl 바이너리를 다운로드
-```
-curl --silent --location "https://github.com/weaveworks/eksctl/releases/latest/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
-```
-- 바이너리를 /usr/local/bin으로 이동
-```
-sudo mv -v /tmp/eksctl /usr/local/bin
-```
-- 설치 여부 확인
-```
-eksctl version
-```
+### 1.9 Account ID, Region 설정
 
-### 1.6 AWS Cloud9 추가 설정
-#### 1.6.1 현재 실행 Region을 기본값으로 설정
 ```
+export ACCOUNT_ID=$(aws sts get-caller-identity --output text --query Account)
 export AWS_REGION=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r '.region')
-
-echo "export AWS_REGION=${AWS_REGION}" | tee -a ~/.bash_profile
-    
-aws configure set default.region ${AWS_REGION}
+export AZS=($(aws ec2 describe-availability-zones --query 'AvailabilityZones[].ZoneName' --output text --region $AWS_REGION))
 ```
 
 
-- 리전 세팅 확인
+### Bash profile 저장
 ```
-aws configure get default.region
-```
-#### 1.6.2 현재 계정 ID을 등록
-```
-export ACCOUNT_ID=$(curl -s 169.254.169.254/latest/dynamic/instance-identity/document | jq -r '.accountId')
-
 echo "export ACCOUNT_ID=${ACCOUNT_ID}" | tee -a ~/.bash_profile
+echo "export AWS_REGION=${AWS_REGION}" | tee -a ~/.bash_profile
+echo "export AZS=(${AZS[@]})" | tee -a ~/.bash_profile
+aws configure set default.region ${AWS_REGION}
+aws configure get default.region
+
 ```
+
