@@ -114,6 +114,27 @@ Client Version: v1.26.4-eks-0a21954
 Kustomize Version: v4.5.7
 ```
 
+
+### 1.4 eksctl
+#### 1.4.1 eksctl 설치(0.142.0)
+https://github.com/weaveworks/eksctl/blob/main/README.md#installation
+
+- eksctl 바이너리를 다운로드
+
+```
+curl --silent --location "https://github.com/weaveworks/eksctl/releases/v0.142.0/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+```
+- 바이너리를 /usr/local/bin으로 이동
+```
+sudo mv -v /tmp/eksctl /usr/local/bin
+```
+- 설치 여부 확인
+```
+eksctl version
+```
+
+
+
 ### 1.4 etc
 #### 1.4.1 jq 설치
 - json을 다루는 유틸리티
