@@ -45,14 +45,41 @@ aws sts get-caller-identity
 ```
 
 ### 1.2 AWS CLI
-#### 1.2.1 AWS CLI 업데이트
-```
-sudo pip install --upgrade awscli
-```
-#### 1.2.2 버전 확인
+* aws cli를 v2로 변경한다.
+#### 1.2.1 버전 확인
 ```
 aws --version
 ```
+#### 1.2.2 AWS CLI Version 1 삭제
+```
+sudo rm /usr/bin/aws
+```
+```
+sudo rm /usr/bin/aws_completer
+```
+```
+sudo rm -rf /usr/local/aws-cli
+```
+#### 1.2.3 AWS CLI Version 2 설치
+```
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+```
+```
+unzip awscliv2.zip
+```
+```
+sudo ./aws/install
+```
+#### 1.2.4 버전 확인
+```
+aws --version
+```
+
+- 결과 예시
+```
+
+```
+
 
 ### 1.3 kubectl
 #### 1.3.1 kubectl 설치
