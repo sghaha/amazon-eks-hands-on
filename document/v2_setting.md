@@ -122,7 +122,7 @@ https://github.com/weaveworks/eksctl/blob/main/README.md#installation
 - eksctl 바이너리를 다운로드
 
 ```
-curl --silent --location "https://github.com/weaveworks/eksctl/releases/v0.142.0/download/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
+curl --silent --location "https://github.com/weaveworks/eksctl/releases/download/v0.142.0/eksctl_$(uname -s)_amd64.tar.gz" | tar xz -C /tmp
 ```
 - 바이너리를 /usr/local/bin으로 이동
 ```
