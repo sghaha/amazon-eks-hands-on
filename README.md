@@ -17,3 +17,4 @@
 # Amazon EKS Hands on v2
 
 ### 1. [환경 구축](https://github.com/sghaha/amazon-eks-hands-on/blob/main/document/v2_setting.md)
+### 2. [EKS Cluster 생성](https://github.com/sghaha/amazon-eks-hands-on/blob/main/document/v2_eks-cluster.md)
