@@ -70,6 +70,12 @@ unzip awscliv2.zip
 ```
 sudo ./aws/install
 ```
+```
+export PATH=/usr/local/bin:$PATH
+```
+```
+source ~/.bash_profile
+```
 #### 1.2.4 버전 확인
 ```
 aws --version
@@ -77,7 +83,7 @@ aws --version
 
 - 결과 예시
 ```
-
+aws-cli/2.11.23 Python/3.11.3 Linux/4.14.314-237.533.amzn2.x86_64 exe/x86_64.amzn.2 prompt/off
 ```
 
 
