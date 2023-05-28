@@ -133,6 +133,50 @@ sudo mv -v /tmp/eksctl /usr/local/bin
 eksctl version
 ```
 
+### 1.5 jq
+
+#### 1.5.1 jq 설치
+- json을 다루는 유틸리티
+```
+sudo yum install -y jq
+```
+
+
+### 1.6 Homebrew
+
+#### 1.6.1 ec2-user 패스워드
+* homebrew설치할때 패스워드 묻는다. 미리 설정
+```
+sudo passwd ec2-user
+```
+
+#### 1.6.2 homebrew 설치
+https://brew.sh/
+
+* 위 url타고 들어가면 아래랑 비슷한 명령어가 있다. 날리자
+```
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+```
+
+* 인스톨후 뭐라뭐라 설명나오는데 아래 두개 명령어 날리면 된다 (명령어가 달라져있을수도있으니까 무턱대로 아래꺼 복붙 하진 말자)
+```
+(echo; echo 'eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"') >> /home/ec2-user/.bash_profile
+```
+```
+eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+```
+
+#### 1.6.3 설치 확인
+```
+brew -v
+```
+
+
+
+
+
+
+---
 
 
 ### 1.4 etc
