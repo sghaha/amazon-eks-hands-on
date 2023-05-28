@@ -195,6 +195,11 @@ brew install derailed/k9s/k9s
 brew install helm
 ```
 
+#### 1.8.2 helm 버전 확인
+```
+helm version
+```
+
 ### 1.9 Account ID, Region 설정
 
 ```
