@@ -204,7 +204,7 @@ export AZS=($(aws ec2 describe-availability-zones --query 'AvailabilityZones[].Z
 ```
 
 
-### Bash profile 저장
+### 1.10 Bash profile 저장
 ```
 echo "export ACCOUNT_ID=${ACCOUNT_ID}" | tee -a ~/.bash_profile
 echo "export AWS_REGION=${AWS_REGION}" | tee -a ~/.bash_profile
