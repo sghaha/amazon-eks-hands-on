@@ -71,3 +71,8 @@ iam:
 EOF
 
 ```
+
+* 생성
+```
+eksctl create cluster -f eks-demo-cluster.yaml
+```
